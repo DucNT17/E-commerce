@@ -6,29 +6,29 @@ const verifyAccessToken = asyncHandler(async (req, res, next) => {
     // headers: { authorization: Bearer token }
     if (req?.headers?.authorization?.startsWith('Bearer')) {
         const token = req.headers.authorization.split(' ')[1]
-        jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decode) => { // decode khi khong phai null thi se la object dung de hash access token
             if (err) return res.status(401).json({
                 success: false,
                 mes: 'Invalid access token'
             })
-            req.user = decode
-            next()
+            req.user = decode;
+            next();
         })
     } else {
         return res.status(401).json({
             success: false,
-            mes: 'Require authentication!!!'
+            mes: 'Require authentication'
         })
     }
 })
 const isAdmin = asyncHandler((req, res, next) => {
-    const { role } = req.user
+    const { role } = req.user;
     if (role !== 'admin')
         return res.status(401).json({
             success: false,
             mes: 'REQUIRE ADMIN ROLE'
         })
-    next()
+    next();
 })
 
 module.exports = {
