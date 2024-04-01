@@ -42,15 +42,9 @@ var userSchema = new mongoose.Schema({
     refreshToken: {
         type: String,
     },
-    passwordChangedAt: {
-        type: String
-    },
-    passwordResetToken: {
-        type: String
-    },
-    passwordResetExpires: {
-        type: String
-    }
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
 }, {
     timestamps: true
 });

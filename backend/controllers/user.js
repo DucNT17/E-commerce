@@ -137,13 +137,29 @@ const resetPassword = asyncHandler(async (req, res) => {
         mes: user ? 'Updated password' : 'Something went wrong'
     })
 })
+
+const updateUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    if (!_id || Object.keys(req.body).length === 0) throw new Error('Missing inputs');
+    const response = await User.findByIdAndUpdate(_id, req.body, { new: true }).select('-password -role -refreshToken');
+    return res.status(200).json({
+        success: response ? true : false,
+        updatedUser: response ? response : 'Some thing went wrong'
+    });
+})
+
+// Chức năng của admin
+
+// Xem danh sách người dùng
 const getUsers = asyncHandler(async (req, res) => {
-    const response = await User.find().select('-refreshToken -password -role')
+    const response = await User.find().select('-refreshToken -password')
     return res.status(200).json({
         success: response ? true : false,
         users: response
     })
 })
+
+// Xóa user
 const deleteUser = asyncHandler(async (req, res) => {
     const { _id } = req.query
     if (!_id) throw new Error('Missing inputs')
@@ -153,18 +169,10 @@ const deleteUser = asyncHandler(async (req, res) => {
         deletedUser: response ? `User with email ${response.email} deleted` : 'No user delete'
     })
 })
-const updateUser = asyncHandler(async (req, res) => {
-    // 
-    const { _id } = req.user
-    if (!_id || Object.keys(req.body).length === 0) throw new Error('Missing inputs')
-    const response = await User.findByIdAndUpdate(_id, req.body, { new: true }).select('-password -role -refreshToken')
-    return res.status(200).json({
-        success: response ? true : false,
-        updatedUser: response ? response : 'Some thing went wrong'
-    })
-})
+
+
+// Cập nhật thông tin user
 const updateUserByAdmin = asyncHandler(async (req, res) => {
-    // 
     const { uid } = req.params
     if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
     const response = await User.findByIdAndUpdate(uid, req.body, { new: true }).select('-password -role -refreshToken')
@@ -173,6 +181,7 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
         updatedUser: response ? response : 'Some thing went wrong'
     })
 })
+
 module.exports = {
     register,
     login,
