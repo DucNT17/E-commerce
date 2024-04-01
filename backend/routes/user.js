@@ -17,6 +17,6 @@ router.put('/:uid', [verifyAccessToken, isAdmin], ctrls.updateUserByAdmin)
 module.exports = router
 
 
-// CRUD | Create - Read - Update - Delete | POST - GET - PUT - DELETEeee
+// CRUD | Create - Read - Update - Delete | POST - GET - PUT - DELETE
 // CREATE (POST) + PUT - body
 // GET + DELETE - query // 
