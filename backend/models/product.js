@@ -7,7 +7,7 @@ var productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    slug: {
+    slug: { // máy tính dell --> may-tinh-dell
         type: String,
         required: true,
         unique: true,
@@ -42,7 +42,7 @@ var productSchema = new mongoose.Schema({
     },
     color: {
         type: String,
-        enum: ['Black', 'Grown', 'Red']
+        enum: ['Black', 'Brown', 'Red']
     },
     ratings: [
         {
