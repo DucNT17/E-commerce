@@ -1,4 +1,3 @@
-const { response } = require('express');
 const Product = require('../models/product.model');
 const asyncHandler = require('express-async-handler');
 const slugify = require('slugify');
@@ -112,6 +111,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
     })
 })
 
+// Ratings sản phẩm
 const ratings = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     const { star, comment, pid } = req.body;
@@ -122,9 +122,9 @@ const ratings = asyncHandler(async (req, res) => {
     if (alreadyRating) {
         // update star and comment
         await Product.updateOne({
-            $ratings: { $elementMatch: alreadyRating }
+            ratings: { $elemMatch: alreadyRating },
         }, {
-            $set: { "ratings.$.star": star, "ratings.$.comment": comment }
+            $set: { "ratings.$.star": star, "ratings.$.comment": comment },
         }, { new: true });
     } else {
         // add star and comment
@@ -133,10 +133,17 @@ const ratings = asyncHandler(async (req, res) => {
         }, { new: true });
     }
 
-    // Sum rating
+    // Sum ratings
+    const updatedProduct = await Product.findById(pid);
+    const ratingCount = updatedProduct.ratings.length;
+    const sumRatings = updatedProduct.ratings.reduce((sum, el) => sum + +el.star, 0)
+    updatedProduct.totalRatings = Math.round(sumRatings * 10 / ratingCount) / 10;
+
+    await updatedProduct.save();
 
     return res.status(200).json({
         status: true,
+        updatedProduct
     })
 })
 
