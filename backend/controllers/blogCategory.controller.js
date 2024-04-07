@@ -18,8 +18,8 @@ const getCategories = asyncHandler(async (req, res) => {
 })
 
 const getCategory = asyncHandler(async (req, res) => {
-    const { pcid } = req.params;
-    const response = await BlogCategory.findById(pcid).select('title', '_id');
+    const { bcid } = req.params;
+    const response = await BlogCategory.findById(bcid).select('title', '_id');
     return res.json({
         success: response ? true : false,
         blogCategory: response ? response : "Cannot find blog category"
@@ -27,8 +27,8 @@ const getCategory = asyncHandler(async (req, res) => {
 });
 
 const updateCategory = asyncHandler(async (req, res) => {
-    const { pcid } = req.params;
-    const response = await BlogCategory.findByIdAndUpdate(pcid, req.body, { new: true });
+    const { bcid } = req.params;
+    const response = await BlogCategory.findByIdAndUpdate(bcid, req.body, { new: true });
     return res.json({
         success: response ? true : false,
         updatedCategory: response ? response : "Cannot updated blog category"
@@ -37,8 +37,8 @@ const updateCategory = asyncHandler(async (req, res) => {
 
 
 const deleteCategory = asyncHandler(async (req, res) => {
-    const { pcid } = req.params;
-    const response = await BlogCategory.findByIdAndDelete(pcid);
+    const { bcid } = req.params;
+    const response = await BlogCategory.findByIdAndDelete(bcid);
     return res.json({
         success: response ? true : false,
         deletedCategory: response ? response : "Cannot delete blog category"

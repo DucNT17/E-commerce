@@ -6,9 +6,9 @@ const { isAdmin, verifyAccessToken } = require('../middlewares/verifyToken')
 
 routes.post('/', [verifyAccessToken, isAdmin], blogCategory.createCategory);
 routes.get('/', blogCategory.getCategories);
-routes.put('/:pcid', [verifyAccessToken, isAdmin], blogCategory.updateCategory);
-routes.delete('/:pcid', [verifyAccessToken, isAdmin], blogCategory.deleteCategory);
-routes.get('/:pcid', blogCategory.getCategory);
+routes.put('/:bcid', [verifyAccessToken, isAdmin], blogCategory.updateCategory);
+routes.delete('/:bcid', [verifyAccessToken, isAdmin], blogCategory.deleteCategory);
+routes.get('/:bcid', blogCategory.getCategory);
 
 
 module.exports = routes;
