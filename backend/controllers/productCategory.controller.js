@@ -5,7 +5,7 @@ const createCategory = asyncHandler(async (req, res) => {
     const response = await ProductCategory.create(req.body);
     return res.json({
         success: response ? true : false,
-        createCategory: response ? response : "Cannot create product category"
+        createdCategory: response ? response : "Cannot create product category"
     })
 })
 
