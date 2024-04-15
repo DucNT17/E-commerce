@@ -147,6 +147,8 @@ const ratings = asyncHandler(async (req, res) => {
     })
 })
 
+
+
 module.exports = {
     createProduct,
     getProduct,

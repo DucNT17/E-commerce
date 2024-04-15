@@ -1,6 +1,6 @@
 const express = require('express')
 require('dotenv').config()
-const dbConnect = require('./databases/dbconnect')
+const dbConnect = require('./configs/dbconnect')
 const initRoutes = require('./routes')
 const cookieParser = require('cookie-parser')
 
