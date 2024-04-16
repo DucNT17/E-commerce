@@ -32,7 +32,7 @@ var blogSchema = new mongoose.Schema(
             },
         ],
 
-        images: {
+        image: {
             type: String,
             default: "https://t4.ftcdn.net/jpg/02/12/65/93/360_F_212659341_3teZ8qGtRuBx2zVfzOjoIrEJv4q7WuuQ.jpg",
         },
