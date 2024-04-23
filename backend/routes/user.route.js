@@ -5,14 +5,19 @@ const { verifyAccessToken, isAdmin } = require('../middlewares/verifyToken')
 
 routes.post('/register', user.register)
 routes.post('/login', user.login)
+routes.post('/refreshtoken', user.refreshAccessToken)   
+
 routes.get('/current', verifyAccessToken, user.getCurrent)
-routes.post('/refreshtoken', user.refreshAccessToken)
-routes.get('/logout', user.logout)
-routes.get('/forgotpassword', user.forgotPassword)
-routes.put('/resetpassword', user.resetPassword)
 routes.get('/', [verifyAccessToken, isAdmin], user.getUsers)
+routes.get('/forgotpassword', user.forgotPassword)
+routes.get('/logout', user.logout)
+
 routes.delete('/', [verifyAccessToken, isAdmin], user.deleteUser)
+
+routes.put('/resetpassword', user.resetPassword)
+routes.put('/cart', [verifyAccessToken], user.updateCart)
 routes.put('/current', [verifyAccessToken], user.updateUser)
+routes.put('/address', [verifyAccessToken], user.updateUserAddress)
 routes.put('/:uid', [verifyAccessToken, isAdmin], user.updateUserByAdmin)
 
 module.exports = routes
