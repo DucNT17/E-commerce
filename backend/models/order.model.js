@@ -13,20 +13,23 @@ var orderSchema = new mongoose.Schema(
                 color: String,
             },
         ],
-        paymentIntent: {},
+        total: Number,
+        coupon: {
+            type: mongoose.Types.ObjectId,
+            ref: "Coupon",
+        },
         status: {
             type: String,
-            default: "Not Processed",
+            default: "Processing",
             enum: [
-                "Not Processed",
-                "Cash on Delivery",
+                // "Not Processed",
+                // "Cash on Delivery",
                 "Processing",
-                "Dispatched",
                 "Cancelled",
-                "Delivered",
+                "Successed",
             ],
         },
-        orderby: {
+        orderBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
