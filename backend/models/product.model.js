@@ -10,11 +10,10 @@ var productSchema = new mongoose.Schema({
     slug: { // máy tính dell --> may-tinh-dell
         type: String,
         required: true,
-        unique: true,
         lowercase: true
     },
     description: {
-        type: String,
+        type: Array,
         required: true,
     },
     brand: {
@@ -26,7 +25,7 @@ var productSchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: mongoose.Types.ObjectId,
+        type: String,
         ref: 'Category'
     },
     quantity: {
@@ -42,7 +41,7 @@ var productSchema = new mongoose.Schema({
     },
     color: {
         type: String,
-        enum: ['Black', 'Brown', 'Red']
+        // required: true
     },
     ratings: [
         {
