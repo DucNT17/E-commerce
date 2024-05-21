@@ -62,7 +62,7 @@ const getProducts = asyncHandler(async (req, res) => {
     // skip: số object lấy về 1 lần gọi API
 
     const page = +req.query.page || 1;
-    const limit = +req.query.limit || 100;
+    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
     const skip = (page - 1) * limit;
     queryCommand = queryCommand.skip(skip).limit(limit);
 
