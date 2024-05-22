@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { apiGetProducts } from '../apis/product'
 import { Product } from './'
 import Slider from "react-slick";
+import laptop1 from '../assets/laptop1.png'
+import laptop2 from '../assets/laptop2.png'
 
 const tabs = [
     { id: 1, name: 'best seller' },
@@ -36,10 +38,10 @@ const BestSeller = () => {
         fetchProducts();
     }, [])
     useEffect(() => {
-        if(activedTab === 1) {
+        if (activedTab === 1) {
             setProducts(bestSellers)
         }
-        if(activedTab === 2) {
+        if (activedTab === 2) {
             setProducts(newProducts)
         }
     }, [activedTab])
@@ -59,13 +61,26 @@ const BestSeller = () => {
             <div className='mt-4 mx-[-10px] border-t-2 border-main pt-3'>
                 <Slider {...settings}>
                     {products?.map(el => (
-                        <Product 
+                        <Product
                             key={el.id}
+                            pid={el.id}
                             productData={el}
                             isNew={activedTab === 1 ? false : true}
                         />
                     ))}
                 </Slider>
+            </div>
+            <div className='w-full flex gap-4 mt-6'>
+                <img 
+                    src={laptop1}
+                    alt='banner'
+                    className='flex-1 object-contain'
+                />
+                <img 
+                    src={laptop2}
+                    alt='banner'
+                    className='flex-1 object-contain'
+                />
             </div>
         </div>
     )
