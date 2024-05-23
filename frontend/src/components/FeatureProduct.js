@@ -13,14 +13,13 @@ const FeatureProduct = () => {
     useEffect(() => {
         fetchProduct();
     }, [])
-    console.log(product);
     return (
         <div className='w-full'>
             <h3 className='text-[20px] font-semibold py-[15px] border-b-2 border-main uppercase'>featured products</h3>
             <div className='flex flex-wrap mt-[15px] mx-[-10px]'>
-                {product?.map(el => (
+                {product?.map((el) => (
                     <ProductCard 
-                        key={el.id}
+                        key={el._id}
                         image={el.thumb}
                         title={el.title}
                         totalRatings={el.totalRatings}

@@ -1,29 +1,16 @@
 import React from 'react'
-import Slider from 'react-slick'
-import { Product } from './'
+import { CustomSlider } from './'
+import { useSelector } from 'react-redux';
 
-const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1
-};
 
 const NewArrival = () => {
+    const { newProducts } = useSelector(state => state.products)
     return (
         <div className='w-full'>
-            <h3 className='text-[20px] font-semibold py-[15px] border-b-2 border-main uppercase'>NEW ARRIVALS</h3>
-            {/* <Slider {...settings}>
-                {products?.map(el => (
-                    <Product
-                        key={el.id}
-                        pid={el.id}
-                        productData={el}
-                        isNew={activedTab === 1 ? false : true}
-                    />
-                ))}
-            </Slider> */}
+            <h3 className='text-[20px] font-semibold py-[15px] uppercase border-main border-b-2'>NEW ARRIVALS</h3>
+            <div className='mt-4 mx-[-10px]'>
+                <CustomSlider products={newProducts} />
+            </div>
         </div>
     )
 }

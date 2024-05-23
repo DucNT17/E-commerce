@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as actions from './asyncAction'
+import * as actions from './asyncActions'
 
 export const appSlice = createSlice({
     name: 'app',
@@ -26,7 +26,7 @@ export const appSlice = createSlice({
             state.errorMessage = action.payload.message;
         });
     },
-}) 
+})
 
 // export const { } = appSlice.actions
 

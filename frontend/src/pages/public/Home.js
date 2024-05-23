@@ -5,7 +5,9 @@ import {
   BestSeller, 
   DealDaily, 
   FeatureProduct, 
-  NewArrival 
+  NewArrival,
+  HotCollections,
+  BlogPosts
 } from '../../components'
 
 
@@ -26,8 +28,14 @@ const Home = () => {
       <div className='my-4'>
         <FeatureProduct />
       </div>
-      <div className='my-4'>
+      <div className='my-4 w-full'>
         <NewArrival />
+      </div>
+      <div className='my-4 w-full'>
+        <HotCollections />
+      </div>
+      <div className='my-4 w-full'>
+        <BlogPosts />
       </div>
       <div className='w-full h-[500px]'>
         

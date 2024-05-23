@@ -10,7 +10,7 @@ const createCategory = asyncHandler(async (req, res) => {
 })
 
 const getCategories = asyncHandler(async (req, res) => {
-    const response = await ProductCategory.find().select('title _id');
+    const response = await ProductCategory.find();
     return res.json({
         success: response ? true : false,
         productCategories: response ? response : "Cannot find product categories"
@@ -19,10 +19,10 @@ const getCategories = asyncHandler(async (req, res) => {
 
 const getCategory = asyncHandler(async (req, res) => {
     const { pcid } = req.params;
-    const response = await ProductCategory.findById(pcid).select('title', '_id');
-    return res.json({ 
-        success: response ? true : false, 
-        ProductCategory: response ? response : "Cannot find product category" 
+    const response = await ProductCategory.findById(pcid);
+    return res.json({
+        success: response ? true : false,
+        ProductCategory: response ? response : "Cannot find product category"
     });
 });
 
