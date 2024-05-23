@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import {
   Login,
-  Home, 
+  Home,
   Public,
-  Blog,     
-  DetailProduct, 
-  FAQ, 
+  Blog,
+  DetailProduct,
+  FAQ,
   Services,
-  Product 
+  Product
 } from './pages/public';
 import path from './utils/path';
 import { getCategories } from './store/app/asyncActions';
@@ -18,13 +18,18 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCategories());
-  }, [])
+  }, [dispatch])
   return (
     <div className="min-h-screen font-main">
       <Routes>
+        <Route path={path.LOGIN} element={<Login />} />
         <Route path={path.PUBLIC} element={<Public />}>
           <Route path={path.HOME} element={<Home />} />
-          <Route path={path.LOGIN} element={<Login />} />
+          <Route path={path.BLOGS} element={<Blog />} />
+          <Route path={path.PRODUCTS} element={<Product />} />
+          <Route path={path.DETAIL_PRODUCT__PID__TITLE} element={<DetailProduct />} />
+          <Route path={path.FAQ} element={<FAQ />} />
+          <Route path={path.OUR_SERVICES} element={<Services />} />
         </Route>
       </Routes>
     </div>

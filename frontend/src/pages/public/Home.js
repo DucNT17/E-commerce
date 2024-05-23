@@ -14,8 +14,8 @@ import {
 const Home = () => {
 
   return (
-    <>
-      <div className='w-main flex'>
+    <div className='w-main'>
+      <div className='w-full flex'>
         <div className='flex flex-col gap-5 w-[25%] flex-auto'>
           <Sidebar />
           <DealDaily />
@@ -40,7 +40,7 @@ const Home = () => {
       <div className='w-full h-[500px]'>
         
       </div>
-    </>
+    </div>
 
   )
 }
