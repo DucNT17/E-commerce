@@ -28,7 +28,7 @@ const BestSeller = () => {
     useEffect(() => {
         fetchProducts();
         dispath(getNewProducts())
-    }, [])
+    }, [dispath])
     useEffect(() => {
         if (activedTab === 1) {
             setProducts(bestSellers)
@@ -36,7 +36,7 @@ const BestSeller = () => {
         if (activedTab === 2) {
             setProducts(newProducts)
         }
-    }, [activedTab])
+    }, [activedTab, bestSellers, newProducts])
     return (
         <div>
             <div className='flex text-[23px] ml-[-32px]'>

@@ -6,7 +6,6 @@ const { IoIosArrowForward } = icons
 
 const HotCollections = () => {
     const { categories } = useSelector(state => state.appReducer)
-    console.log(categories);
     return (
         <div className='w-full'>
             <h3 className='text-[20px] font-semibold py-[15px] uppercase border-main border-b-2'>hot collections</h3>
