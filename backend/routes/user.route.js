@@ -4,12 +4,13 @@ const user = require('../controllers/user.controller')
 const { verifyAccessToken, isAdmin } = require('../middlewares/verifyToken')
 
 routes.post('/register', user.register)
+routes.get('/finalregister/:token', user.finalRegister)
 routes.post('/login', user.login)
-routes.post('/refreshtoken', user.refreshAccessToken)   
+routes.post('/refreshtoken', user.refreshAccessToken)
 
 routes.get('/current', verifyAccessToken, user.getCurrent)
 routes.get('/', [verifyAccessToken, isAdmin], user.getUsers)
-routes.get('/forgotpassword', user.forgotPassword)
+routes.post('/forgotpassword', user.forgotPassword)
 routes.get('/logout', user.logout)
 
 routes.delete('/', [verifyAccessToken, isAdmin], user.deleteUser)
@@ -21,8 +22,3 @@ routes.put('/address', [verifyAccessToken], user.updateUserAddress)
 routes.put('/:uid', [verifyAccessToken, isAdmin], user.updateUserByAdmin)
 
 module.exports = routes
-
-
-// CRUD | Create - Read - Update - Delete | POST - GET - PUT - DELETE
-// CREATE (POST) + PUT - body
-// GET + DELETE - query // 
