@@ -14,6 +14,7 @@ module.exports = {
       },
       backgroundColor: {
         main: '#ee3131',
+        'black-rbga': 'rgba(0, 0, 0, 0.7)',
       },
       colors: {
         main: '#ee3131',

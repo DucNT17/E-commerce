@@ -38,41 +38,57 @@ const register = asyncHandler(async (req, res) => {
         throw new Error('User has existed');
     } else {
         const token = makeToken();
-        res.cookie('dataregister', { ...req.body, token }, { httpOnly: true, maxAge: 15 * 60 * 1000 });
-        const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký. Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
-        <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`
-        await sendMail({
-            email,
-            html,
-            subject: 'Finish registration Digital Store'
-        });
+        const emailedited = btoa(email) + '@' + token;
+        const newUser = await User.create({
+            email: emailedited, password, firstname, lastname, mobile
+        })
+        if (newUser) {
+            const html = `<h2>Register code:</h2><br /><blockquote>${token}</blockquote>`;
+            await sendMail({
+                email,
+                html,
+                subject: 'Confirm register account Digital Store'
+            });
+        }
+        setTimeout(async() => {
+            await User.deleteOne({ email: emailedited })
+        }, [15 * 60 * 1000])
         return res.json({
-            success: true,
-            mes: 'Please check your email address to active account'
+            success: newUser ? true : false,
+            mes: newUser ? 'Please check your email address to active account' : "Somthing went wrong, please try again"
         })
     }
 })
 
 const finalRegister = asyncHandler(async (req, res) => {
-    const cookie = req.cookies;
+    // const cookie = req.cookies;
     const { token } = req.params;
-    if (!cookie || cookie?.dataregister?.token !== token) {
-        res.clearCookie('dataregister');
-        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`);
+    const notActivedEmail = await User.findOne({ email: new RegExp(`${token}$`) });
+    if(notActivedEmail){
+        notActivedEmail.email = atob(notActivedEmail?.email?.split('@')[0]);
+        notActivedEmail.save();
     }
-    const newUser = await User.create({
-        email: cookie?.dataregister?.email,
-        password: cookie?.dataregister?.password,
-        mobile: cookie?.dataregister?.mobile,
-        firstname: cookie?.dataregister?.firstname,
-        lastname: cookie?.dataregister?.lastname
-    });
-    res.clearCookie('dataregister')
-    if (newUser) {
-        return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`);
-    } else {
-        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
-    }
+    return res.json({
+        success: notActivedEmail ? true : false,
+        mes: notActivedEmail ? 'Register is successfully, please go login' : "Somthing went wrong, please try again"
+    })
+    // if (!cookie || cookie?.dataregister?.token !== token) {
+    //     res.clearCookie('dataregister');
+    //     return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`);
+    // }
+    // const newUser = await User.create({
+    //     email: cookie?.dataregister?.email,
+    //     password: cookie?.dataregister?.password,
+    //     mobile: cookie?.dataregister?.mobile,
+    //     firstname: cookie?.dataregister?.firstname,
+    //     lastname: cookie?.dataregister?.lastname
+    // });
+    // res.clearCookie('dataregister')
+    // if (newUser) {
+    //     return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`);
+    // } else {
+    //     return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    // }
 })
 // Refresh token => Cấp mới access token
 // Access token => Xác thực người dùng, phân quyền người dùng
@@ -97,9 +113,10 @@ const login = asyncHandler(async (req, res) => {
         // Lưu refresh token vào cookie
         res.cookie('refreshToken', newRefreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
         return res.status(200).json({
-            success: true,
+            success: response ? true : false,
             accessToken,
-            userData
+            userData,
+            // mes: response ? 'Login successful' : 'Something went wrong'
         })
     } else {
         throw new Error('Invalid credentials!');
