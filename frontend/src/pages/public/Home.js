@@ -1,10 +1,10 @@
 import React from 'react'
-import { 
-  Sidebar, 
-  Banner, 
-  BestSeller, 
-  DealDaily, 
-  FeatureProduct, 
+import {
+  Sidebar,
+  Banner,
+  BestSeller,
+  DealDaily,
+  FeatureProduct,
   NewArrival,
   HotCollections,
   BlogPosts
@@ -14,8 +14,8 @@ import {
 const Home = () => {
 
   return (
-    <div className='w-main'>
-      <div className='w-full flex'>
+    <>
+      <div className='w-main flex mt-6'>
         <div className='flex flex-col gap-5 w-[25%] flex-auto'>
           <Sidebar />
           <DealDaily />
@@ -25,22 +25,22 @@ const Home = () => {
           <BestSeller />
         </div>
       </div>
-      <div className='my-4'>
+      <div className='my-4 w-main'>
         <FeatureProduct />
       </div>
-      <div className='my-4 w-full'>
+      <div className='my-4 w-main'>
         <NewArrival />
       </div>
-      <div className='my-4 w-full'>
+      <div className='my-4 w-main'>
         <HotCollections />
       </div>
-      <div className='my-4 w-full'>
+      <div className='my-4 w-main'>
         <BlogPosts />
       </div>
-      <div className='w-full h-[500px]'>
-        
+      <div className='w-main h-[500px]'>
+
       </div>
-    </div>
+    </>
 
   )
 }

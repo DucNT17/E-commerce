@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import loginBackground from '../../assets/background.jpg'
 import { InputField, Button } from '../../components'
-import { 
-  apiRegister, 
+import {
+  apiRegister,
   apiLogin,
-  apiForgotPassword, 
-  apiFinalRegister 
+  apiForgotPassword,
+  apiFinalRegister
 } from '../../apis'
 import Swal from 'sweetalert2'
 import { useNavigate, Link } from 'react-router-dom'
@@ -123,14 +123,13 @@ const Login = () => {
           />
           <div className='flex items-center justify-end gap-4'>
             <Button
-              name='Submit'
+
               handleOnClick={handleForgotPassword}
               style='px-4 py-2 rounded-md text-white bg-blue-500 font-semibold my-2'
-            />
+            >Submit</Button>
             <Button
-              name='Cancel'
               handleOnClick={() => setisForgotPassWord(false)}
-            />
+            >Cancel</Button>
           </div>
         </div>
       </div>}
@@ -179,10 +178,9 @@ const Login = () => {
             setInvalidFields={setInvalidFields}
           />
           <Button
-            name={isRegister ? 'Register' : 'Login'}
             handleOnClick={handleSubmit}
             fw
-          />
+          >{isRegister ? 'Register' : 'Login'}</Button>
           <div className='w-full flex items-center justify-between my-2 text-sm'>
             {!isRegister && <span className='text-blue-500 hover:underline cursor-pointer' onClick={() => setisForgotPassWord(true)}>Forgot your account?</span>}
             {!isRegister && <span className='text-blue-500 hover:underline cursor-pointer' onClick={() => setIsRegister(true)}>Create account</span>}

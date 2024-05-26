@@ -10,9 +10,9 @@ const ResetPassword = () => {
   const handleResetPassword = async () => {
     const response = await apiResetPassword({password, token});
     if (response.success) {
-      toast.success(response.mes)
+      toast.success(response.mes);
     } else {
-      toast.error(response.mes)
+      toast.error(response.mes);
     }
   }
   return (
@@ -26,11 +26,10 @@ const ResetPassword = () => {
           onChange={e => setPassword(e.target.value)}
         />
         <div className='flex items-center justify-end gap-4'>
-          <Button
-            name='Submit'
+          <Button            
             handleOnClick={handleResetPassword}
             style='px-4 py-2 rounded-md text-white bg-blue-500 font-semibold my-2'
-          />
+          >Submit</Button>
         </div>
       </div>
     </div>

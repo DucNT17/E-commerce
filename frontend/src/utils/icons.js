@@ -1,7 +1,7 @@
 import { RiPhoneFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
 import { LuShoppingBag } from "react-icons/lu";
-import { FaUserCircle, FaHeart } from "react-icons/fa";
+import { FaUserCircle, FaHeart, FaShieldAlt, FaTruck, FaGift, FaReply, FaTty } from "react-icons/fa";
 import {
     AiFillHome,
     AiFillStar,
@@ -24,7 +24,12 @@ const icons = {
     AiOutlineMenu,
     FaHeart,
     IoIosArrowForward,
-    AiOutlineLogout
+    AiOutlineLogout,
+    FaShieldAlt,
+    FaTruck,
+    FaGift,
+    FaReply,
+    FaTty
 }
 
 export default icons;
