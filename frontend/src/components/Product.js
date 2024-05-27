@@ -17,11 +17,11 @@ const Product = ({ productData, isNew, normal }) => {
       <Link className='w-full border p-[15px] flex flex-col items-center'
         to={`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.title}`}
         onMouseEnter={e => {
-          e.stopPropagation();
+          // e.stopPropagation();
           setIsShowOption(true);
         }}
         onMouseLeave={e => {
-          e.stopPropagation();
+          // e.stopPropagation();
           setIsShowOption(false);
         }}
       >

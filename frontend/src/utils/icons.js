@@ -8,7 +8,8 @@ import {
     AiOutlineStar,
     AiFillEye,
     AiOutlineMenu,
-    AiOutlineLogout
+    AiOutlineLogout,
+    AiOutlineDown
 } from "react-icons/ai";
 import { IoIosArrowForward } from "react-icons/io";
 
@@ -29,7 +30,8 @@ const icons = {
     FaTruck,
     FaGift,
     FaReply,
-    FaTty
+    FaTty, 
+    AiOutlineDown
 }
 
 export default icons;

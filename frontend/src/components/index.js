@@ -21,3 +21,4 @@ export { default as Breadcrumb } from './Breadcrumb';
 export { default as SelectQuantity } from './SelectQuantity';
 export { default as ProductExtraInfoItem } from './ProductExtraInfoItem';
 export { default as ProductInfo } from './ProductInfo';
+export { default as SearchItems } from './SearchItems';

@@ -8,7 +8,6 @@ import {
   DetailProduct,
   FAQ,
   Services,
-  Product,
   FinalRegister,
   ResetPassword
 } from './pages/public';
@@ -17,6 +16,7 @@ import { getCategories } from './store/app/asyncActions';
 import { useDispatch } from 'react-redux'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Products from './pages/public/Products';
 
 
 function App() {
@@ -44,10 +44,10 @@ function App() {
         <Route path={path.PUBLIC} element={<Public />}>
           <Route path={path.HOME} element={<Home />} />
           <Route path={path.BLOGS} element={<Blog />} />
-          <Route path={path.PRODUCTS} element={<Product />} />
           <Route path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLE} element={<DetailProduct />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.OUR_SERVICES} element={<Services />} />
+          <Route path={path.PRODUCTS} element={<Products />} />
           <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         </Route>
       </Routes>

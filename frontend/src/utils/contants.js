@@ -118,3 +118,15 @@ export const productInfoTabs = [
         name: 'CUSTOMER REVIEWS',
     },
 ]
+
+export const colors = [
+    'black',
+    'brown',
+    'gray',
+    'green',
+    'blue',
+    'white',
+    'orange',
+    'pink',
+    'yellow',
+]
