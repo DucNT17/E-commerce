@@ -15,7 +15,6 @@ const Products = () => {
     if (response.success) {
       setProducts(response.products);
     }
-
   }
   useEffect(() => {
     let param = [];
@@ -23,7 +22,7 @@ const Products = () => {
       param.push(i)
     }
     const queries = {};
-    for(let i of params){
+    for (let i of params) {
       queries[i[0]] = i[1];
     }
     console.log(param);

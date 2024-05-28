@@ -2,15 +2,28 @@ import React, { memo, useEffect, useState } from 'react'
 import icons from '../utils/icons'
 import { colors } from '../utils/contants'
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom'
+import { apiGetProducts } from '../apis'
+import { formatMoney } from '../utils/helper'
+
 
 const { AiOutlineDown } = icons
 
 const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }) => {
     const navigate = useNavigate()
     const { category } = useParams();
-    const [selected, setSelected] = useState([])
+    const [selected, setSelected] = useState([]);
+    const [bestPrice, setBestPrice] = useState(0)
+    const [price, setPrice] = useState({
+        from: '',
+        to: ''
+    })
+    const fetchBestPriceProduct = async () => {
+        const response = await apiGetProducts({ sort: '-price', limit: 1 });
+        if (response.success) {
+            setBestPrice(response.products[0].price)
+        }
+    }
     const handleSelect = (e) => {
-        
         const alreadyElement = selected.find(el => el === e.target.value);
         if (alreadyElement) {
             setSelected(prev => prev.filter(el => el !== e.target.value))
@@ -20,14 +33,38 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
         changeActiveFilter(null);
     }
     useEffect(() => {
-        navigate({
-            pathname: `/${category}`,
-            search: createSearchParams({
-                color: selected
-            }).toString()
-        })
+        if (selected.length > 0) {
+            navigate({
+                pathname: `/${category}`,
+                search: createSearchParams({
+                    color: selected.join(',')
+                }).toString()
+            })
+        } else {
+            navigate(`/${category}`)
+        }
     }, [selected])
-    // console.log(selected);
+
+    useEffect(() => {
+        if (type === 'input') {
+            fetchBestPriceProduct();
+        }
+    }, [])
+
+    useEffect(() => {
+        console.log(price);
+        // if (selected.length > 0) {
+        //     navigate({
+        //         pathname: `/${category}`,
+        //         search: createSearchParams({
+        //             color: selected.join(',')
+        //         }).toString()
+        //     })
+        // } else {
+        //     navigate(`/${category}`)
+        // }
+    }, [price])
+
     return (
         <div
             className='p-3 cursor-pointer text-gray-500 text-xs gap-6 relative border border-gray-800 flex justify-between items-center'
@@ -63,6 +100,41 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
                                 <label className='capitalize text-gray-700' htmlFor={el}>{el}</label>
                             </div>
                         ))}
+                    </div>
+                </div>}
+                {type === 'input' && <div onClick={e => e.stopPropagation()}>
+                    <div className='p-4 items-center flex justify-between gap-8 border-b'>
+                        <span className='whitespace-nowrap'>{`The highest price is ${formatMoney(bestPrice)} VND`}</span>
+                        <span
+                            className='underline hover:text-main cursor-pointer'
+                            onClick={e => {
+                                e.stopPropagation()
+                            }}
+                        >
+                            Reset
+                        </span>
+                    </div>
+                    <div className='flex items-center p-2 gap-2'>
+                        <div className='flex items-center gap-2'>
+                            <label htmlFor='from'>From</label>
+                            <input
+                                className='form-input'
+                                type='number'
+                                id='from'
+                                value={price.from}
+                                onChange={e => setPrice(prev => ({ ...prev, from: e.target.value }))}
+                            />
+                        </div>
+                        <div className='flex items-center gap-2'>
+                            <label htmlFor='to'>To</label>
+                            <input
+                                className='form-input'
+                                type='number'
+                                id='to'
+                                value={price.to}
+                                onChange={e => setPrice(prev => ({ ...prev, to: e.target.value }))}
+                            />
+                        </div>
                     </div>
                 </div>}
             </div>}
