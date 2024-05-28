@@ -4,7 +4,8 @@ import { colors } from '../utils/contants'
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom'
 import { apiGetProducts } from '../apis'
 import { formatMoney } from '../utils/helper'
-
+import useDebounce from '../hooks/useDebounce'
+import { toast } from 'react-toastify'
 
 const { AiOutlineDown } = icons
 
@@ -32,6 +33,7 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
         }
         changeActiveFilter(null);
     }
+
     useEffect(() => {
         if (selected.length > 0) {
             navigate({
@@ -49,21 +51,33 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
         if (type === 'input') {
             fetchBestPriceProduct();
         }
-    }, [])
+    }, [type])
+
 
     useEffect(() => {
-        console.log(price);
-        // if (selected.length > 0) {
-        //     navigate({
-        //         pathname: `/${category}`,
-        //         search: createSearchParams({
-        //             color: selected.join(',')
-        //         }).toString()
-        //     })
-        // } else {
-        //     navigate(`/${category}`)
-        // }
+        if(price.from > price.to) {
+            toast.info('From price cannot be greater than To price')
+        }
     }, [price])
+
+    const debouncePriceFrom = useDebounce(price.from, 500)
+    const debouncePriceTo = useDebounce(price.to, 500)
+    useEffect(() => {
+        const data = {};
+        if (Number(price.from) > 0) {
+            data.from = price.from
+        }
+        if (Number(price.to) > 0) {
+            data.to = price.to
+        }
+        navigate({
+            pathname: `/${category}`,
+            search: createSearchParams(data).toString()
+        })
+
+    }, [debouncePriceFrom, debouncePriceTo])
+
+
 
     return (
         <div
@@ -108,7 +122,9 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
                         <span
                             className='underline hover:text-main cursor-pointer'
                             onClick={e => {
-                                e.stopPropagation()
+                                e.stopPropagation();
+                                setPrice({from: '', to: ''})
+                                changeActiveFilter(null);
                             }}
                         >
                             Reset
