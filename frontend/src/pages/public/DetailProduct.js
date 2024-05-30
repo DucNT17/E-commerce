@@ -37,7 +37,7 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
   const [currentImage, setCurrentImage] = useState(null)
-
+  const [update, setUpdate] = useState(false);
   const fetchProducts = async () => {
     const response = await apiGetProducts({ category });
     if (response.success) {
@@ -52,6 +52,7 @@ const DetailProduct = () => {
       setCurrentImage(response?.productData.thumb)
     }
   }
+
   useEffect(() => {
     if (pid) {
       fetchProductData();
@@ -59,6 +60,13 @@ const DetailProduct = () => {
     }
     window.scrollTo(0, 0);
   }, [pid]);
+
+  useEffect(() => {
+    if (pid) {
+      fetchProductData();
+    }
+  }, [update]);
+
 
   const handleQuantity = useCallback((number) => {
     setQuantity(number);
@@ -74,6 +82,10 @@ const DetailProduct = () => {
     e.stopPropagation();
     setCurrentImage(el)
   }
+
+  const rerender = useCallback(() => {
+    setUpdate(!update);
+  }, [update]);
 
   return (
     <div className='w-full'>
@@ -142,8 +154,10 @@ const DetailProduct = () => {
       <div className='w-main m-auto mt-8'>
         <ProductInfo
           totalRatings={product?.totalRatings}
-          totalCount={18}
+          ratings={product?.ratings}
           nameProduct={product?.title}
+          pid={product?._id}
+          rerender={rerender}
         />
       </div>
       <div className='w-main m-auto my-6'>

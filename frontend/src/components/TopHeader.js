@@ -12,8 +12,14 @@ const TopHeader = () => {
     const dispatch = useDispatch();
     const { isLoggedIn, current } = useSelector(state => state.user);
     useEffect(() => {
-        if (isLoggedIn) {
-            dispatch(getCurrent());
+        const setTimeoutId = setTimeout(() => {
+            if (isLoggedIn) {
+                dispatch(getCurrent());
+            }
+        }, 300)
+        
+        return () => {
+            clearTimeout(setTimeoutId);
         }
     }, [dispatch, isLoggedIn])
     return (
