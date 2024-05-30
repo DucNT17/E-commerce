@@ -1,6 +1,6 @@
 import React, { memo, useState, useCallback } from 'react'
 import { productInfoTabs } from '../utils/contants'
-import { Votebar, Button, VoteOption } from './'
+import { Votebar, Button, VoteOption, Comment } from './'
 import { renderStarFromNumber } from '../utils/helper'
 import { apiRatings } from '../apis'
 import { useDispatch, useSelector } from 'react-redux'
@@ -95,6 +95,16 @@ const ProductInfo = ({ totalRatings, ratings, nameProduct, pid, rerender }) => {
                         <Button handleOnClick={handleVoteNow}>
                             Vote Now!
                         </Button>
+                    </div>
+                    <div className='flex flex-col gap-4'>
+                        {ratings?.map(el => (
+                            <Comment 
+                                key={el._id}
+                                star={el.star}
+                                updatedAt={el.updatedAt}
+                                comment={el.comment}
+                            />
+                        ))}
                     </div>
                 </div>}
             </div>
