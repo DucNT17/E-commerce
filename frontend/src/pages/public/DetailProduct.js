@@ -7,7 +7,7 @@ import {
   SelectQuantity,
   ProductExtraInfoItem,
   ProductInfo,
-  CustomSlider
+  Product
 } from '../../components'
 import Slider from "react-slick";
 import { formatMoney, formatPrice, renderStarFromNumber } from '../../utils/helper';
@@ -22,22 +22,34 @@ const settings = {
   slidesToScroll: 1
 };
 
+const setting = {
+  dots: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 1
+};
+
 const DetailProduct = () => {
+
   const { pid, title, category } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
+  const [currentImage, setCurrentImage] = useState(null)
+
   const fetchProducts = async () => {
     const response = await apiGetProducts({ category });
-    if(response.success) {
+    if (response.success) {
       setRelatedProducts(response.products)
     }
   }
+
   const fetchProductData = async () => {
     const response = await apiGetProduct(pid);
-    // console.log(response);
     if (response.success) {
       setProduct(response.productData)
+      setCurrentImage(response?.productData.thumb)
     }
   }
   useEffect(() => {
@@ -45,7 +57,8 @@ const DetailProduct = () => {
       fetchProductData();
       fetchProducts();
     }
-  }, []);
+    window.scrollTo(0, 0);
+  }, [pid]);
 
   const handleQuantity = useCallback((number) => {
     setQuantity(number);
@@ -57,6 +70,11 @@ const DetailProduct = () => {
     if (flag === 'plus') setQuantity(prev => +prev + 1);
   }, [quantity])
 
+  const handleClickImage = (e, el) => {
+    e.stopPropagation();
+    setCurrentImage(el)
+  }
+
   return (
     <div className='w-full'>
       <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
@@ -67,24 +85,26 @@ const DetailProduct = () => {
       </div>
       <div className='w-main m-auto mt-4 flex'>
         <div className='w-2/5 flex flex-col gap-4'>
-          <div className='h-[458px] w-[458px] border'>
-            <img src={product?.thumb} alt='product-thumb' />
+          <div className='h-[458px] w-[458px] border overflow-hidden'>
+            <img src={currentImage} alt='product-thumb' />
           </div>
+
           <div className='w-[458px]'>
             <Slider {...settings} className=''>
               {product?.images?.map((el, index) => (
                 <div key={index} className='flex w-full gap-2'>
-                  <img src={el} alt='sub-product' className='h-[143px] w-[143px] border object-contain' />
+                  <img onClick={e => handleClickImage(e, el)} src={el} alt='sub-product' className='h-[143px] w-[143px] border object-contain cursor-pointer' />
                 </div>
               ))}
             </Slider>
           </div>
+
         </div>
         <div className='w-2/5 flex flex-col gap-4 pr-[24px]'>
           <div className='flex items-center justify-between'>
             <h2 className='text-[30px] font-semibold'>{`${formatMoney(formatPrice(product?.price))} VND`}</h2>
             <span className='text-sm text-main italic'>
-              {`Quantity: ${product?.quantity}`}
+              {`In Stock: ${product?.quantity}`}
             </span>
           </div>
           <div className='flex items-center gap-1'>
@@ -103,7 +123,6 @@ const DetailProduct = () => {
               <span className='font-semibold'>Quantity</span>
               <SelectQuantity quantity={quantity} handleQuantity={handleQuantity} handleChangeQuantity={handleChangeQuantity} />
             </div>
-
             <Button fw>
               ADD TO CART
             </Button>
@@ -121,14 +140,26 @@ const DetailProduct = () => {
         </div>
       </div>
       <div className='w-main m-auto mt-8'>
-        <ProductInfo />
+        <ProductInfo
+          totalRatings={product?.totalRatings}
+          totalCount={18}
+          nameProduct={product?.title}
+        />
       </div>
-      <div className='w-main m-auto mt-8'>
+      <div className='w-main m-auto my-6'>
         <h3 className='text-[20px] font-semibold py-[15px] uppercase border-main border-b-2'>OTHER CUSTOMERS ALSO BUY:</h3>
-        <CustomSlider products={relatedProducts} normal={true} />
-      </div>
-      <div className='w-full h-[100px]'>
-
+        {/* <CustomSlider products={relatedProducts} normal={true}/> */}
+        <Slider {...setting} className='mt-4'>
+          {relatedProducts?.map((el, index) => (
+            <Product
+              key={index}
+              pid={el._id}
+              productData={el}
+              isNew={false}
+              normal={true}
+            />
+          ))}
+        </Slider>
       </div>
     </div>
   )

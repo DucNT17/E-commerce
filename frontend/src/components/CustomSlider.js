@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, { memo } from 'react'
 import Slider from "react-slick";
 import { Product } from './'
 
@@ -13,19 +13,20 @@ const settings = {
 
 const CustomSlider = ({ products, activedTab, normal }) => {
     return (
-        <div>
-            <Slider {...settings}>
-                {products?.map((el) => (
+        <>
+            {products && <Slider {...settings}>
+                {products?.map((el, index) => (
                     <Product
-                        key={el._id}
-                        pid={el._id}
+                        key={index}
+                        pid={el.id}
                         productData={el}
                         isNew={activedTab === 1 ? false : true}
                         normal={normal}
                     />
                 ))}
-            </Slider>
-        </div>
+            </Slider>}
+
+        </>
     )
 }
 
