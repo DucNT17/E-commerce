@@ -64,11 +64,11 @@ const ProductInfo = ({ totalRatings, ratings, nameProduct, pid, rerender }) => {
                 {productInfoTabs.some(el => el.id === activedTab) && productInfoTabs.find(el => el.id === activedTab)?.content}
             </div>
 
-            <div className='flex flex-col p-4 border my-4'>
-                <span className='flex items-center justify-center text-xl font-semibold pb-4'>
+            <div className='flex flex-col p-4 border my-4 w-main'>
+                <span className='flex items-center justify-center text-xl font-semibold pb-4 w-full'>
                     CUSTOMERS REVIEW
                 </span>
-                <div className='flex'>
+                <div className='flex w-full'>
                     <div className='flex-4 border flex items-center border-red-500 flex-col justify-center gap-2'>
                         <span className='font-semibold text-3xl'>{`${totalRatings}/5`}</span>
                         <div className='flex items-center'>
