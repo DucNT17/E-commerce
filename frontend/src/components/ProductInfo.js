@@ -21,7 +21,7 @@ const ProductInfo = ({ totalRatings, ratings, nameProduct, pid, rerender }) => {
             toast.info('Please vote when click submit');
             return;
         }
-        await apiRatings({ star: score, comment, pid });
+        await apiRatings({ star: score, comment, pid, updatedAt: Date.now() });
         dispatch(showModal({ isShowModal: false, modalChildren: null }));
         toast.success('Rating successfully');
         rerender();
