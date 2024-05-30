@@ -25,7 +25,7 @@ const Comment = ({ image = avatar, name='Anonymous', updatedAt, comment, star })
                             ))}
                         </span>
                     </div>
-                    <div className='flex items-center gap-1'>
+                    <div className='flex gap-1'>
                         <span className='font-semibold'>Comment:</span>
                         <span className='flex items-center gap-1'>
                             {comment}

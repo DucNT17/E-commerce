@@ -1,7 +1,7 @@
 import React, { memo, useRef, useEffect, useState } from 'react'
 import logo from '../assets/logo.png'
 import { voteOptions } from '../utils/contants';
-import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+import { AiFillStar } from 'react-icons/ai';
 import { Button } from './'
 
 

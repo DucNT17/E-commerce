@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from 'react'
+import React, { memo, useState } from 'react'
 import { productInfoTabs } from '../utils/contants'
 import { Votebar, Button, VoteOption, Comment } from './'
 import { renderStarFromNumber } from '../utils/helper'
@@ -104,6 +104,7 @@ const ProductInfo = ({ totalRatings, ratings, nameProduct, pid, rerender }) => {
                             star={el.star}
                             updatedAt={el.updatedAt}
                             comment={el.comment}
+                            name={`${el.postedBy?.lastname} ${el.postedBy?.firstname}`}
                         />
                     ))}
                 </div>
