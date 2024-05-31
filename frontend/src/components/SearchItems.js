@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react'
 import icons from '../utils/icons'
 import { colors } from '../utils/contants'
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { apiGetProducts } from '../apis'
 import { formatMoney } from '../utils/helper'
 import useDebounce from '../hooks/useDebounce'
@@ -11,9 +11,10 @@ const { AiOutlineDown } = icons
 
 const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }) => {
     const navigate = useNavigate()
+    const [params] = useSearchParams();
     const { category } = useParams();
     const [selected, setSelected] = useState([]);
-    const [bestPrice, setBestPrice] = useState(0)
+    const [bestPrice, setBestPrice] = useState(0);
     const [price, setPrice] = useState({
         from: '',
         to: ''
@@ -35,16 +36,25 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
     }
 
     useEffect(() => {
-        if (selected.length > 0) {
-            navigate({
-                pathname: `/${category}`,
-                search: createSearchParams({
-                    color: selected.join(',')
-                }).toString()
-            })
-        } else {
-            navigate(`/${category}`)
+        let param = [];
+        for (let i of params.entries()) {
+            param.push(i)
         }
+        const queries = {};
+        for (let i of param) {
+            queries[i[0]] = i[1];
+        }
+
+        if (selected.length > 0) {          
+            queries.color = selected.join(',');
+            queries.page = 1;
+        } else {
+            delete queries.color
+        }
+        navigate({
+            pathname: `/${category}`,
+            search: createSearchParams(queries).toString()
+        })
     }, [selected])
 
     useEffect(() => {
@@ -53,9 +63,8 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
         }
     }, [type])
 
-
     useEffect(() => {
-        if(price.from > price.to) {
+        if (price.from && price.to && price.from > price.to) {
             toast.info('From price cannot be greater than To price')
         }
     }, [price])
@@ -63,16 +72,25 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
     const debouncePriceFrom = useDebounce(price.from, 500)
     const debouncePriceTo = useDebounce(price.to, 500)
     useEffect(() => {
-        const data = {};
+
+        let param = [];
+        for (let i of params.entries()) {
+            param.push(i)
+        }
+        const queries = {};
+        for (let i of param) {
+            queries[i[0]] = i[1];
+        }
+        queries.page = 1;
         if (Number(price.from) > 0) {
-            data.from = price.from
+            queries.from = price.from
         }
         if (Number(price.to) > 0) {
-            data.to = price.to
+            queries.to = price.to
         }
         navigate({
             pathname: `/${category}`,
-            search: createSearchParams(data).toString()
+            search: createSearchParams(queries).toString()
         })
 
     }, [debouncePriceFrom, debouncePriceTo])
@@ -123,7 +141,7 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
                             className='underline hover:text-main cursor-pointer'
                             onClick={e => {
                                 e.stopPropagation();
-                                setPrice({from: '', to: ''})
+                                setPrice({ from: '', to: '' })
                                 changeActiveFilter(null);
                             }}
                         >

@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom'
-import { Breadcrumb, Product, SearchItems, InputSelect } from '../../components';
+import {
+  Breadcrumb,
+  Product,
+  SearchItems,
+  InputSelect,
+  Pagination
+} from '../../components';
 import { apiGetProducts } from '../../apis';
 import Masonry from 'react-masonry-css'
 import { sorts } from '../../utils/contants';
@@ -17,7 +23,7 @@ const Products = () => {
   const fetchProductsByCategory = async (queries) => {
     const response = await apiGetProducts(queries);
     if (response.success) {
-      setProducts(response.products);
+      setProducts(response);
     }
   }
   useEffect(() => {
@@ -40,18 +46,20 @@ const Products = () => {
         ]
       }
       delete queries.price;
-    }
-    if (queries.from) {
-      queries.price = { gte: queries.from }
+    } else {
+      if (queries.from) {
+        queries.price = { gte: queries.from }
+      }
+
+      if (queries.to) {
+        queries.price = { lte: queries.to }
+      }
     }
 
-    if (queries.to) {
-      queries.price = { lte: queries.to }
-    }
     delete queries.from;
     delete queries.to;
     const q = { ...priceQuery, ...queries }
-    console.log(q);
+    window.scrollTo(0, 0);
     fetchProductsByCategory(q);
   }, [params])
   const changeActiveFilter = useCallback((name) => {
@@ -61,29 +69,33 @@ const Products = () => {
       setActiveClick(name);
     }
   }, [activeClick])
-  
+
   const changeValue = useCallback((value) => {
     setSort(value);
-  },[sort])
+  }, [sort])
 
   useEffect(() => {
-    navigate({
-      pathname: `/${category}`,
-      search: createSearchParams({
-        sort: sort
-      }).toString()
-    })
+    if (sort) {
+      navigate({
+        pathname: `/${category}`,
+        search: createSearchParams({
+          sort: sort
+        }).toString()
+      })
+    }
   }, [sort])
 
 
   return (
     <div className='w-full'>
+      {/* Breadcrumb */}
       <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
         <div className='w-main'>
           <h3 className='font-semibold uppercase'>{category}</h3>
           <Breadcrumb category={category} />
         </div>
       </div>
+      {/* Filter */}
       <div className='w-main border p-4 flex justify-between mt-4 m-auto'>
         <div className='w-4/5 flex-auto flex flex-col gap-2'>
           <span className='font-semibold text-sm'>Filter by</span>
@@ -97,16 +109,17 @@ const Products = () => {
             Sort by
           </span>
           <div className='w-full'>
-            <InputSelect value={sort} options={sorts} changeValue={changeValue}/>
+            <InputSelect value={sort} options={sorts} changeValue={changeValue} />
           </div>
         </div>
       </div>
+      {/* Product Card */}
       <div className='mt-8 w-main m-auto'>
         <Masonry
           breakpointCols={4}
           className="flex mx-[-10px]"
           columnClassName="my-masonry-grid_column">
-          {products?.map(el => (
+          {products?.products?.map(el => (
             <Product
               key={el._id}
               pid={el._id}
@@ -116,6 +129,13 @@ const Products = () => {
           ))}
         </Masonry>
       </div>
+      {/* Pagination */}
+      <div className='w-main m-auto flex my-4 justify-end'>
+        <Pagination
+          totalCount={products?.counts}
+        />
+      </div>
+
       <div className='w-full h-[500px]'>
 
       </div>
