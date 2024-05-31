@@ -72,7 +72,6 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
     const debouncePriceFrom = useDebounce(price.from, 500)
     const debouncePriceTo = useDebounce(price.to, 500)
     useEffect(() => {
-
         let param = [];
         for (let i of params.entries()) {
             param.push(i)
@@ -84,9 +83,13 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
         queries.page = 1;
         if (Number(price.from) > 0) {
             queries.from = price.from
+        } else {
+            delete queries.from;
         }
         if (Number(price.to) > 0) {
             queries.to = price.to
+        } else {
+            delete queries.to;
         }
         navigate({
             pathname: `/${category}`,
@@ -113,6 +116,7 @@ const SearchItems = ({ name, activeClick, changeActiveFilter, type = 'checkbox' 
                             onClick={e => {
                                 e.stopPropagation()
                                 setSelected([]);
+                                changeActiveFilter(null);
                             }}
                         >
                             Reset

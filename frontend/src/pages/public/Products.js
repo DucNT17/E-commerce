@@ -61,7 +61,8 @@ const Products = () => {
     const q = { ...priceQuery, ...queries }
     window.scrollTo(0, 0);
     fetchProductsByCategory(q);
-  }, [params])
+  }, [params]);
+
   const changeActiveFilter = useCallback((name) => {
     if (activeClick === name) {
       setActiveClick(null);
