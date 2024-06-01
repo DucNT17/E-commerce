@@ -128,7 +128,8 @@ const Login = () => {
             <Button
 
               handleOnClick={handleForgotPassword}
-              style='px-4 py-2 rounded-md text-white bg-blue-500 font-semibold my-2'
+              // eslint-disable-next-line
+              style='px-4 py-2 rounded-md text-white bg-blue-500 font-semibold my-2' 
             >Submit</Button>
             <Button
               handleOnClick={() => setisForgotPassWord(false)}
