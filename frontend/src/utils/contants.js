@@ -188,3 +188,93 @@ export const voteOptions = [
         text: "Perfect"
     },
 ]
+
+const { MdSpaceDashboard, RiBillLine, TbBrandProducthunt, MdCategory, RiCoupon3Fill, MdGroups } = icons
+
+export const adminSidebar = [
+    {
+        id: 1,
+        type: "SINGLE",
+        text: "Dashboard",
+        path: `/${path.ADMIN}/${path.DASHBOARD}`,
+        icon: <MdSpaceDashboard size={20} />,
+    },
+    {
+        id: 2,
+        type: "SINGLE",
+        text: "Order",
+        path: `/${path.ADMIN}/${path.MANAGE_ORDER}`,
+        icon: <RiBillLine size={20} />,
+    },
+    {
+        id: 3,
+        type: "PARENT",
+        text: "Product",
+        icon: <TbBrandProducthunt size={20} />,
+        submenu: [
+            {
+                text: "Manage Products",
+                path: `/${path.ADMIN}/${path.MANAGE_PRODUCTS}`,
+            },
+            {
+                text: "Create Product",
+                path: `/${path.ADMIN}/${path.CREATE_PRODUCTS}`,
+            },
+        ],
+    },
+    {
+        id: 4,
+        type: "PARENT",
+        text: "Category",
+        icon: <MdCategory size={20} />,
+        submenu: [
+            {
+                text: "Manage Categorys",
+                path: `/${path.ADMIN}/${path.MANAGE_CATEGORY}`,
+            },
+            {
+                text: "Create Category",
+                path: `/${path.ADMIN}/${path.CREATE_CATEGORY}`,
+            },
+        ],
+    },
+    {
+        id: 5,
+        type: "PARENT",
+        text: "Brand",
+        icon: <MdCategory size={20} />,
+        submenu: [
+            {
+                text: "Manage Brands",
+                path: `/${path.ADMIN}/${path.MANAGE_BRAND}`,
+            },
+            {
+                text: "Create Brand",
+                path: `/${path.ADMIN}/${path.CREATE_BRAND}`,
+            },
+        ],
+    },
+    {
+        id: 6,
+        type: "PARENT",
+        text: "Coupon",
+        icon: <RiCoupon3Fill size={20} />,
+        submenu: [
+            {
+                text: "Manage Coupons",
+                path: `/${path.ADMIN}/${path.MANAGE_COUPON}`,
+            },
+            {
+                text: "Create Coupons",
+                path: `/${path.ADMIN}/${path.CREATE_COUPON}`,
+            },
+        ],
+    },
+    {
+        id: 7,
+        type: "SINGLE",
+        text: "User",
+        path: `/${path.ADMIN}/${path.MANAGE_USER}`,
+        icon: <MdGroups size={20} />,
+    },
+];

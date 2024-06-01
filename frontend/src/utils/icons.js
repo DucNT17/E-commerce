@@ -1,5 +1,5 @@
-import { RiPhoneFill } from "react-icons/ri";
-import { MdEmail } from "react-icons/md";
+import { RiPhoneFill, RiBillLine, RiCoupon3Fill } from "react-icons/ri";
+import { MdEmail, MdSpaceDashboard, MdCategory, MdGroups } from "react-icons/md";
 import { LuShoppingBag } from "react-icons/lu";
 import { FaUserCircle, FaHeart, FaShieldAlt, FaTruck, FaGift, FaReply, FaTty } from "react-icons/fa";
 import {
@@ -12,6 +12,8 @@ import {
     AiOutlineDown
 } from "react-icons/ai";
 import { IoIosArrowForward } from "react-icons/io";
+import { TbBrandProducthunt } from "react-icons/tb";
+
 
 const icons = {
     RiPhoneFill,
@@ -31,7 +33,13 @@ const icons = {
     FaGift,
     FaReply,
     FaTty, 
-    AiOutlineDown
+    AiOutlineDown,
+    MdSpaceDashboard, 
+    RiBillLine,
+    TbBrandProducthunt,
+    MdCategory, 
+    RiCoupon3Fill,
+    MdGroups
 }
 
 export default icons;
