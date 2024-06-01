@@ -1,11 +1,14 @@
-import React from 'react'
-import logo from '../assets/logo.png'
-import icons from '../utils/icons'
+import React, { Fragment } from 'react'
+import logo from 'assets/logo.png'
+import icons from 'utils/icons'
 import { Link } from 'react-router-dom'
-import path from '../utils/path'
+import path from 'utils/path'
+import { useSelector } from 'react-redux'
+
+const { RiPhoneFill, MdEmail, LuShoppingBag, FaUserCircle } = icons;
 
 const Header = () => {
-  const { RiPhoneFill, MdEmail, LuShoppingBag, FaUserCircle } = icons;
+  const { current } = useSelector(state => state.user);
   return (
     <div className='flex justify-between w-main h-[100px] py-[35px]'>
       <Link to={`/${path.HOME}`}>
@@ -30,18 +33,23 @@ const Header = () => {
             Online Support 24/7
           </span>
         </div>
-        <div className='flex items-center justify-center gap-2 px-6 border-r cursor-pointer'>
-          <LuShoppingBag color='red' />
-          <span>
-            0 item(s)
-          </span>
-        </div>
-        <div className='flex items-center justify-center px-6 gap-2 cursor-pointer'>
-          <FaUserCircle color='red'/>
-          <span>Profile</span>
-        </div>
+        {current && <Fragment>
+          <div className='flex items-center justify-center gap-2 px-6 border-r cursor-pointer'>
+            <LuShoppingBag color='red' />
+            <span>
+              0 item(s)
+            </span>
+          </div>
+          <Link
+            to={+current?.role === 1 ? `/${path.ADMIN}/${path.DASHBOARD}` : `/${path.MEMBER}/${path.PERSONAL}`}
+            className='flex items-center justify-center px-6 gap-2 cursor-pointer'
+          >
+            <FaUserCircle color='red' />
+            <span>Profile</span>
+          </Link>
+        </Fragment>}
       </div>
-    </div>
+    </div >
   )
 }
 
