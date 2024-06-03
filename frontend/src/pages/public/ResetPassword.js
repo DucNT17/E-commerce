@@ -28,6 +28,7 @@ const ResetPassword = () => {
         <div className='flex items-center justify-end gap-4'>
           <Button            
             handleOnClick={handleResetPassword}
+            // eslint-disable-next-line
             style='px-4 py-2 rounded-md text-white bg-blue-500 font-semibold my-2'
           >Submit</Button>
         </div>

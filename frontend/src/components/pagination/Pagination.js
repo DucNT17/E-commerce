@@ -1,36 +1,44 @@
-import React, { memo } from 'react'
-import usePagination from 'hooks/usePagination'
-import { PagiItem } from 'components'
-import { useSearchParams } from 'react-router-dom'
+import React, { memo } from "react";
+import usePagination from "hooks/usePagination";
+import { useSearchParams } from "react-router-dom";
+import PagiItem from "./PagiItem";
 
 const Pagination = ({ totalCount }) => {
     const [params] = useSearchParams();
-    const pagination = usePagination(totalCount, +params.get('page'));
+    const pagination = usePagination(totalCount, +params.get("page") || 1);
+
     const range = () => {
-        const currentPage = +params.get('page');
-        const pageSize = process.env.REACT_APP_PRODUCT_LIMIT || 10;
-        const start = (currentPage - 1) * pageSize + 1;
+        const currentPage = +params.get("page");
+        const pageSize = +process.env.REACT_APP_LIMIT || 10;
+        const start = Math.min((currentPage - 1) * pageSize + 1, totalCount);
         const end = Math.min(currentPage * pageSize, totalCount);
         return `${start} - ${end}`;
-    }
+    };
     return (
-        <div className='flex justify-between w-main items-center'>
-            {!+params.get('page') && <span className='text-sm italic'>{`Show products 1 - ${process.env.REACT_APP_PRODUCT_LIMIT || 10} of ${totalCount}`}</span>}
-            {+params.get('page') && <span className='text-sm italic'>{`Show products ${range()} of ${totalCount}`}</span>}
-
-            <div className='flex items-center'>
-                {pagination?.map(el => (
-                    <PagiItem key={el}>
-                        {el}
-                    </PagiItem>
+        <div className="flex w-full justify-between items-center mt-10">
+            {!+params.get("page") ? (
+                <span className="text-sm hidden lg:inline-block italic">{`Show ${Math.min(
+                    totalCount,
+                    1
+                )} - ${Math.min(
+                    +process.env.REACT_APP_LIMIT,
+                    totalCount
+                )} trên ${totalCount}`}</span>
+            ) : (
+                ""
+            )}
+            {+params.get("page") ? (
+                <span className="text-sm hidden lg:inline-block italic">{`Show ${range()} from ${totalCount}`}</span>
+            ) : (
+                ""
+            )}
+            <div className="flex mt-8 lg:mt-0 items-center">
+                {pagination?.map((el) => (
+                    <PagiItem key={el}>{el}</PagiItem>
                 ))}
             </div>
         </div>
+    );
+};
 
-    )
-}
-
-export default memo(Pagination)
-
-// first + last + current + sibling + 2*Dots
-// min = 6 => sibling + 5
+export default memo(Pagination);

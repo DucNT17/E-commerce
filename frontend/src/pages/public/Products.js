@@ -21,22 +21,13 @@ const Products = () => {
   const [sort, setSort] = useState('')
   // console.log(params.entries());
   const fetchProductsByCategory = async (queries) => {
-    const response = await apiGetProducts(queries);
+    const response = await apiGetProducts({ ...queries, limit: process.env.REACT_APP_LIMIT });
     if (response.success) {
       setProducts(response);
     }
   }
   useEffect(() => {
-    let param = [];
-    for (let i of params.entries()) {
-      param.push(i)
-    }
-
-    const queries = {};
-    for (let i of params) {
-      queries[i[0]] = i[1];
-    }
-
+    const queries = Object.fromEntries([...params]);
     let priceQuery = {};
     if (queries.from && queries.to) {
       priceQuery = {
@@ -131,14 +122,10 @@ const Products = () => {
         </Masonry>
       </div>
       {/* Pagination */}
-      <div className='w-main m-auto flex my-4 justify-end'>
+      <div className='w-main m-auto flex my-4 justify-end py-8'>
         <Pagination
           totalCount={products?.counts}
         />
-      </div>
-
-      <div className='w-full h-[500px]'>
-
       </div>
     </div>
   )

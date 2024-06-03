@@ -278,3 +278,25 @@ export const adminSidebar = [
         icon: <MdGroups size={20} />,
     },
 ];
+
+export const roles = [
+    {
+        code: 0,
+        value: 'user',
+    },
+    {
+        code: 1,
+        value: 'admin',
+    }
+]
+
+export const blockStatus = [
+    {
+        code: true,
+        value: 'Blocked'
+    },
+    {
+        code: false,
+        value: 'Active',
+    }
+]

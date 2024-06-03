@@ -1,9 +1,13 @@
 const Product = require('../models/product.model');
 const ProductCategory = require('../models/productCategory.model')
+const Role = require('../models/role.model')
 const asyncHandler = require('express-async-handler');
 const data = require('../../data/data2.json')
 const categoryData = require('../../data/cate_brand')
 const slugify = require('slugify');
+const {
+    roles
+} = require('../utils/constant')
 
 const fn = async (product) => {
     await Product.create({
@@ -43,7 +47,23 @@ const insertCategory = asyncHandler(async (req, res) => {
     await Promise.all(promises)
     return res.json('Done')
 })
+
+const fn3 = async (role) => {
+    await Role.create({
+        code: role?.code,
+        value: role?.value,
+    })
+}
+
+const insertRole = asyncHandler(async (req, res) => {
+    const promises = [];
+    for (let role of roles) promises.push(fn3(role));
+    await Promise.all(promises)
+    return res.json('Done')
+})
+
 module.exports = {
     insertProduct,
-    insertCategory
+    insertCategory,
+    insertRole
 }

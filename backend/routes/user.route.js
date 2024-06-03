@@ -7,13 +7,15 @@ routes.post('/register', user.register)
 routes.put('/finalregister/:token', user.finalRegister)
 routes.post('/login', user.login)
 routes.post('/refreshtoken', user.refreshAccessToken)
+routes.post('/mock', user.createUsers)
+
 
 routes.get('/current', verifyAccessToken, user.getCurrent)
 routes.get('/', [verifyAccessToken, isAdmin], user.getUsers)
 routes.post('/forgotpassword', user.forgotPassword)
 routes.get('/logout', user.logout)
 
-routes.delete('/', [verifyAccessToken, isAdmin], user.deleteUser)
+routes.delete('/:uid', [verifyAccessToken, isAdmin], user.deleteUser)
 
 routes.put('/resetpassword', user.resetPassword)
 routes.put('/cart', [verifyAccessToken], user.updateCart)

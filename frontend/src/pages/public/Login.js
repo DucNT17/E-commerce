@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import loginBackground from 'assets/background.jpg'
-import { InputField, Button, Loading } from 'components'
+import { InputFieldLogin, Button, Loading } from 'components'
 import {
   apiRegister,
   apiLogin,
@@ -144,14 +144,14 @@ const Login = () => {
         <div className='p-8 bg-white flex flex-col items-center rounded-md min-w-[500px] '>
           <h1 className='text-[28px] font-semibold mb-8 text-main'>{isRegister ? 'Register' : 'Login'}</h1>
           {isRegister && <div className='flex items-center gap-2'>
-            <InputField
+            <InputFieldLogin
               value={payload.firstname}
               setValue={setPayload}
               nameKey='firstname'
               invalidFields={invalidFields}
               setInvalidFields={setInvalidFields}
             />
-            <InputField
+            <InputFieldLogin
               value={payload.lastname}
               setValue={setPayload}
               nameKey='lastname'
@@ -159,21 +159,21 @@ const Login = () => {
               setInvalidFields={setInvalidFields}
             />
           </div>}
-          <InputField
+          <InputFieldLogin
             value={payload.email}
             setValue={setPayload}
             nameKey='email'
             invalidFields={invalidFields}
             setInvalidFields={setInvalidFields}
           />
-          {isRegister && <InputField
+          {isRegister && <InputFieldLogin
             value={payload.mobile}
             setValue={setPayload}
             nameKey='mobile'
             invalidFields={invalidFields}
             setInvalidFields={setInvalidFields}
           />}
-          <InputField
+          <InputFieldLogin
             value={payload.password}
             setValue={setPayload}
             nameKey='password'

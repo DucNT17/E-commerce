@@ -2,3 +2,7 @@
 POST http://localhost:5000/api/insert/product
 ###
 POST http://localhost:5000/api/insert/category
+###
+POST http://localhost:5000/api/insert/role
+###
+POST http://localhost:5000/api/user/mock

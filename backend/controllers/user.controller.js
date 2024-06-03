@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/sendMail')
 const crypto = require('crypto')
 const makeToken = require('uniqid')
+const { usersTest } = require('../utils/constant')
 
 // const register = asyncHandler(async (req, res) => {
 //     const { email, password, firstname, lastname } = req.body;
@@ -50,7 +51,7 @@ const register = asyncHandler(async (req, res) => {
                 subject: 'Confirm register account Digital Store'
             });
         }
-        setTimeout(async() => {
+        setTimeout(async () => {
             await User.deleteOne({ email: emailedited })
         }, [15 * 60 * 1000])
         return res.json({
@@ -64,7 +65,7 @@ const finalRegister = asyncHandler(async (req, res) => {
     // const cookie = req.cookies;
     const { token } = req.params;
     const notActivedEmail = await User.findOne({ email: new RegExp(`${token}$`) });
-    if(notActivedEmail){
+    if (notActivedEmail) {
         notActivedEmail.email = atob(notActivedEmail?.email?.split('@')[0]);
         notActivedEmail.save();
     }
@@ -220,21 +221,77 @@ const updateUser = asyncHandler(async (req, res) => {
 
 // Xem danh sách người dùng
 const getUsers = asyncHandler(async (req, res) => {
-    const response = await User.find().select('-refreshToken -password')
-    return res.status(200).json({
-        success: response ? true : false,
-        users: response
+    const queries = { ...req.query };
+    const excludeFields = ["limit", "sort", "page", "fields"];
+    excludeFields.forEach(el => delete queries[el]);
+
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, (matchEl) => `$${matchEl}`);
+    const formatedQueries = JSON.parse(queryString);
+
+    if (queries?.name) formatedQueries.name = { $regex: queries.name, $options: 'i' };
+
+    if (req.query.q) {
+        delete formatedQueries.q;
+        formatedQueries["$or"] = [
+            { firstname: { $regex: req.query.q, $options: "i" } },
+            { lastname: { $regex: req.query.q, $options: "i" } },
+            { email: { $regex: req.query.q, $options: "i" } },
+            // { mobile: { $regex: req.query.q, $options: "i" } },
+        ];
+    }
+    let queryCommand = User.find(formatedQueries);
+
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ');
+        queryCommand = queryCommand.sort(sortBy);
+    } else {
+        queryCommand = queryCommand.sort('-createdAt');
+    }
+
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    } else {
+        queryCommand = queryCommand.select('-__v')
+    }
+
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
+    const skip = (page - 1) * limit;
+    queryCommand = queryCommand.skip(skip).limit(limit);
+
+
+    // Execute query
+    // Số lượng sản phẩm thỏa mãn điều kiện != số lượng sản phẩm trả về 1 lần gọi API
+    // queryCommand.exec(async (err, response) => {
+    //     if (err) throw new Error(err.message);
+    //     const counts = await Product.find(formattedQueries).countDocuments();
+    //     return res.status(200).json({
+    //         success: response ? true : false,
+    //         products: response ? response : 'Cannot get products',
+    //         counts
+    //     });  
+    // })
+    queryCommand.then(async (response) => {
+        const counts = await User.find(formatedQueries).countDocuments();
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            users: response ? response : 'Cannot get users'
+        });
+    }).catch((err) => {
+        throw new Error(err.message);
     })
-})
+});
 
 // Xóa user
 const deleteUser = asyncHandler(async (req, res) => {
-    const { _id } = req.query
-    if (!_id) throw new Error('Missing inputs')
-    const response = await User.findByIdAndDelete(_id)
+    const { uid } = req.params;
+    const response = await User.findByIdAndDelete(uid);
     return res.status(200).json({
         success: response ? true : false,
-        deletedUser: response ? `User with email ${response.email} deleted` : 'No user delete'
+        mes: response ? `User with email ${response.email} deleted` : 'No user delete'
     })
 })
 
@@ -246,7 +303,7 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     const response = await User.findByIdAndUpdate(uid, req.body, { new: true }).select('-password -role -refreshToken');
     return res.status(200).json({
         success: response ? true : false,
-        updatedUser: response ? response : 'Some thing went wrong'
+        mes: response ? "Updated user successfully" : 'Some thing went wrong'
     });
 });
 
@@ -260,6 +317,14 @@ const updateUserAddress = asyncHandler(async (req, res) => {
     });
 
 })
+
+const createUsers = asyncHandler(async (req, res) => {
+    const response = await User.create(usersTest);
+    return res.status(200).json({
+        success: response ? true : false,
+        users: response ? response : "Some thing went wrong",
+    });
+});
 
 const updateCart = asyncHandler(async (req, res) => {
     const { _id } = req.user;
@@ -305,5 +370,5 @@ module.exports = {
     updateUserByAdmin,
     updateUserAddress,
     updateCart,
-
+    createUsers
 }
