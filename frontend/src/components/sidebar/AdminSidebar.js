@@ -1,6 +1,6 @@
 import React, { memo, Fragment, useState } from 'react'
 import logo from 'assets/logo.png'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { adminSidebar } from 'utils/contants'
 import clsx from "clsx";
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
@@ -74,12 +74,12 @@ const AdminSidebar = ({ navigate }) => {
                         )}
                     </Fragment>
                 ))}
-                <div onClick={() => navigate(`/`)} className={notActivedStyle}>
+                <Link to={'/'} className={notActivedStyle}>
                     <span>
                         <RiShareForwardLine />
                     </span>
                     <span className="uppercase">về trang chủ</span>
-                </div>
+                </Link>
             </div>
         </div>
     )

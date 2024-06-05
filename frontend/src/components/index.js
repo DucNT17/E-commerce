@@ -34,3 +34,5 @@ export { default as AdminSidebar } from './sidebar/AdminSidebar';
 export { default as InputForm } from './inputs/InputForm';
 export { default as Select } from './inputs/Select';
 export { default as InputFieldLogin } from './inputs/InputFieldLogin';
+export { default as ButtonV2 } from './button/ButtonV2';
+export { default as MarkdownEditor } from './inputs/MarkdownEditor';

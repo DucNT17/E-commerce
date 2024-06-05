@@ -13,10 +13,10 @@ const AdminLayout = () => {
 
     return (
         <div className='flex w-full bg-gray-100 min-h-screen relative text-gray-900'>
-            <div className='w-[327px] top-0 bottom-0 flex-none fixed overflow-y-auto'>
+            <div className='w-[280px] top-0 bottom-0 flex-none fixed overflow-y-auto'>
                 <AdminSidebar />
             </div>
-            <div className="w-[327px]"></div>
+            <div className="w-[280px]"></div>
             <div className='flex-auto'>
                 <Outlet />
             </div>

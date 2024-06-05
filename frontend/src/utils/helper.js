@@ -4,6 +4,21 @@ const { AiFillStar, AiOutlineStar } = icons
 
 export const createSlug = string => string.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(' ').join('-');
 export const formatMoney = number => Number(number?.toFixed(1)).toLocaleString(); // (12345.67).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+
+export const formatPriceVN = (value) => {
+    return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+    }).format(value);
+};
+
+export const formatPriceUSD = (value) => {
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+    }).format(value);
+};
+
 export const renderStarFromNumber = (number, size) => {
     if (!Number(number)) return;
     // 4 => [1,1,1,1,0]
@@ -31,11 +46,23 @@ export const validate = (payload, setInvalidFields) => {
     let invalids = 0;
     const formatPayload = Object.entries(payload);
     for (let arr of formatPayload) {
-        if (arr[1].trim() === '') {
-            invalids++;
+        if (arr[1] === '') {
             setInvalidFields((prev) => [...prev, { name: arr[0], mes: "Require this field" }])
+            invalids++;
         }
     }
+    formatPayload.forEach((item) => {
+        if (item[1] === "") {
+            setInvalidFields((prev) => [
+                ...prev,
+                {
+                    name: item[0],
+                    mes: "Require this field",
+                },
+            ]);
+            invalids++;
+        }
+    });
     // for (let arr of formatPayload) {
     //     switch (arr[0]) {
     //         case 'email':
@@ -67,3 +94,12 @@ export const generateRange = (start, end) => {
     return Array.from({ length }, (_, index) => start + index)
 }
 
+export function getBase64(file) {
+    if (!file) return "";
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
+}

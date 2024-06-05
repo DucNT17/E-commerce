@@ -12,7 +12,7 @@ module.exports = {
       decimal: 'decimal',
       square: 'square',
       roman: 'upper-roman',
-    },  
+    },
     extend: {
       width: {
         main: '1220px',
@@ -20,6 +20,7 @@ module.exports = {
       backgroundColor: {
         main: '#ee3131',
         'black-rbga': 'rgba(0, 0, 0, 0.7)',
+        'black-rgba-50': 'rgba(0, 0, 0, 0.5)',
       },
       colors: {
         main: '#ee3131',
@@ -63,18 +64,29 @@ module.exports = {
             '-webkit-transform': 'translateX(0px)',
             transform: 'translateX(0)'
           }
+        },
+        'scale-up-center': {
+          '0%': {
+            '-webkit-transform': 'scale(0.5)',
+            transform: 'scale(0.5)'
+          },
+          '100%': {
+            '-webkit-transform': 'scale(1)',
+            transform: 'scale(1)'
+          }
         }
       },
       animation: {
         'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
         'slide-top-sm': 'slide-top-sm 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
-        'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;'
+        'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+        'scale-up-center': 'scale-up-center 0.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;'
       },
     },
   },
   plugins: [
     require("@tailwindcss/forms")({
-      strategy: 'class', 
+      strategy: 'class',
     }),
   ],
 }

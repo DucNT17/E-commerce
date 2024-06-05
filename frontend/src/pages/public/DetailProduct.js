@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { apiGetProduct, apiGetProducts } from '../../apis';
+import { apiGetProduct, apiGetProducts } from 'apis';
 import {
   Breadcrumb,
   Button,
@@ -8,11 +8,11 @@ import {
   ProductExtraInfoItem,
   ProductInfo,
   Product
-} from '../../components'
+} from 'components'
 import Slider from "react-slick";
-import { formatMoney, formatPrice, renderStarFromNumber } from '../../utils/helper';
-import { productExtraInfo } from '../../utils/contants'
-
+import { formatMoney, formatPrice, renderStarFromNumber } from 'utils/helper';
+import { productExtraInfo } from 'utils/contants'
+import DOMPurify from 'dompurify';
 
 const settings = {
   dots: false,
@@ -97,8 +97,8 @@ const DetailProduct = () => {
       </div>
       <div className='w-main m-auto mt-4 flex'>
         <div className='w-2/5 flex flex-col gap-4'>
-          <div className='h-[458px] w-[458px] border overflow-hidden'>
-            <img src={currentImage} alt='product-thumb' />
+          <div className='h-[458px] w-[458px] border overflow-hidden flex items-center'>
+            <img src={currentImage} alt='product-thumb'/>
           </div>
 
           <div className='w-[458px]'>
@@ -126,9 +126,10 @@ const DetailProduct = () => {
             <span className='text-sm text-main italic'>{`(Sold: ${product?.sold})`}</span>
           </div>
           <ul className='list-square text-sm text-gray-500 pl-4'>
-            {product?.description?.map((el, index) => (
+            {product?.description?.length > 1 && product?.description?.map((el, index) => (
               <li key={index} className='leading-6'>{el}</li>
             ))}
+            {product?.description?.length === 1 && <div className='text-sm line-clamp-[10] mb-8' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product?.description[0])}}></div>}
           </ul>
           <div className='flex flex-col gap-8'>
             <div className='flex items-center gap-4'>

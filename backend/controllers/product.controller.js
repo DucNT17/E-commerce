@@ -4,14 +4,29 @@ const slugify = require('slugify');
 
 
 const createProduct = asyncHandler(async (req, res) => {
-    if (Object.keys(req.body).length === 0) throw new Error('Missing inputs');
-    if (req.body && req.body.title) {
-        req.body.slug = slugify(req.body.title);
+    const { title, price, description, brand, category, color } = req.body;
+
+    const thumb = req?.files?.thumb[0]?.path
+    const images = req.files?.images?.map((el) => el.path);
+
+    if (!(title && price && description && brand && category && color)) throw new Error('Missing inputs');
+    const checkName = await Product.findOne({
+        title: { $regex: new RegExp("^" + title + "$", "i") },
+    });
+    if (checkName) {
+        return res.status(400).json({
+            success: false,
+            msg: "Product already exists",
+        });
     }
+    req.body.slug = slugify(title);
+    if (thumb) req.body.thumb = thumb;
+    if (images) req.body.images = images;
+
     const newProduct = await Product.create(req.body);
     return res.status(200).json({
         success: newProduct ? true : false,
-        createdProduct: newProduct ? newProduct : 'Cannot create new product'
+        mes: newProduct ? "Product created successfully" : 'Failed to create product'
     });
 })
 
@@ -40,19 +55,31 @@ const getProducts = asyncHandler(async (req, res) => {
     // format các operators đúng theo đúng cú pháp của mongoose
     let queryString = JSON.stringify(queries);
     queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, (matchEl) => `$${matchEl}`);
-    const restQueries = JSON.parse(queryString);
+    const formatedQueries = JSON.parse(queryString);
 
-    let formatedQueries = {};
+    let colorQueryObject = {};
     if (queries?.color) {
-        delete restQueries.color
+        delete formatedQueries.color
         const colorQuery = queries.color?.split(',').map(el => ({ color: { $regex: el, $options: 'i' } }))
-        formatedQueries = { $or: colorQuery}
+        colorQueryObject = { $or: colorQuery }
     }
-    //Filtering 
-    if (queries?.title) restQueries.title = { $regex: queries.title, $options: 'i' };
-    if (queries?.category) restQueries.category = { $regex: queries.category, $options: 'i' };
-    const q = { ...formatedQueries, ...restQueries }
-    let queryCommand = Product.find(q);
+    if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' };
+    if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' };
+
+    let queryObject = {}
+    if (queries?.q) {
+        delete formatedQueries.q;
+        queryObject = {
+            $or: [
+                { color: { $regex: queries.q, $options: 'i' } },
+                { title: { $regex: queries.q, $options: 'i' } },
+                { category: { $regex: queries.q, $options: 'i' } },
+                { brand: { $regex: queries.q, $options: 'i' } },
+            ]
+        }
+    }
+    const qr = { ...formatedQueries, ...colorQueryObject, ...queryObject}
+    let queryCommand = Product.find(qr);
 
     // Sorting 
     // abc,efg => [abc,efg] => abc efg
@@ -93,7 +120,7 @@ const getProducts = asyncHandler(async (req, res) => {
     //     });  
     // })
     queryCommand.then(async (response) => {
-        const counts = await Product.find(q).countDocuments();
+        const counts = await Product.find(qr).countDocuments();
         return res.status(200).json({
             success: response ? true : false,
             counts,
