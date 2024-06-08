@@ -10,7 +10,7 @@ import {
   Product
 } from 'components'
 import Slider from "react-slick";
-import { formatMoney, formatPrice, renderStarFromNumber, formatPriceVN } from 'utils/helper';
+import { renderStarFromNumber, formatPriceVN } from 'utils/helper';
 import { productExtraInfo } from 'utils/contants'
 import DOMPurify from 'dompurify';
 import clsx from 'clsx';
@@ -31,15 +31,17 @@ const setting = {
   slidesToScroll: 1
 };
 
-const DetailProduct = () => {
+const DetailProduct = ({ isQuickView, data }) => {
 
-  const { pid, title, category } = useParams();
+  const params = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
   const [currentImage, setCurrentImage] = useState(null)
   const [update, setUpdate] = useState(false);
   const [varriant, setVarriant] = useState(null);
+  const [pid, setPid] = useState(null);
+  const [category, setCategory] = useState(null);
   const [currentProduct, setCurrentProduct] = useState({
     title: '',
     color: '',
@@ -47,6 +49,17 @@ const DetailProduct = () => {
     images: [],
     price: '',
   })
+
+  useEffect(() => {
+    if (data) {
+      setPid(data.pid);
+      setCategory(data.category);
+    } else if (params && params.pid) {
+      setPid(params.pid);
+      setCategory(params.category);
+    }
+  }, [data, params])
+
   const fetchProducts = async () => {
     const response = await apiGetProducts({ category });
     if (response.success) {
@@ -63,7 +76,7 @@ const DetailProduct = () => {
   }
 
   useEffect(() => {
-    if(varriant) {
+    if (varriant) {
       setCurrentProduct({
         title: product?.varriants?.find(el => el.sku === varriant)?.title,
         color: product?.varriants?.find(el => el.sku === varriant)?.color,
@@ -110,15 +123,16 @@ const DetailProduct = () => {
 
   console.log(product);
   return (
-    <div className='w-full'>
-      <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
+    <div className={clsx('w-full')}>
+      {!isQuickView && <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
         <div className='w-main'>
           <h3 className='font-semibold'>{currentProduct?.title || product?.title}</h3>
           <Breadcrumb title={currentProduct?.title || product?.title} category={category} />
         </div>
-      </div>
-      <div className='w-main m-auto mt-4 flex'>
-        <div className='w-2/5 flex flex-col gap-4'>
+      </div>}
+      <div onClick={e => e.stopPropagation()}
+        className={clsx('bg-white m-auto mt-4 flex', isQuickView ? 'max-w-[900px] gap-16 p-8 max-h-[90vh] overflow-y-auto' : 'w-main')}>
+        <div className={clsx('w-2/5 flex flex-col gap-4', isQuickView && 'w-1/2')}>
           <div className='h-[458px] w-[458px] border overflow-hidden flex items-center'>
             <img src={currentProduct?.thumb || currentImage} alt='product-thumb' />
           </div>
@@ -139,7 +153,7 @@ const DetailProduct = () => {
           </div>
 
         </div>
-        <div className='w-2/5 flex flex-col gap-4 pr-[24px]'>
+        <div className={clsx('w-2/5 flex flex-col gap-4 pr-[24px]', isQuickView && 'w-1/2')}>
           <div className='flex items-center justify-between'>
             <h2 className='text-[30px] font-semibold'>{`${formatPriceVN(currentProduct?.price || product?.price)}`}</h2>
             <span className='text-sm text-main italic'>
@@ -200,7 +214,8 @@ const DetailProduct = () => {
             </Button>
           </div>
         </div>
-        <div className='w-1/5'>
+
+        {!isQuickView && <div className='w-1/5'>
           {productExtraInfo?.map(el => (
             <ProductExtraInfoItem
               key={el.id}
@@ -209,9 +224,9 @@ const DetailProduct = () => {
               sub={el.sub}
             />
           ))}
-        </div>
+        </div>}
       </div>
-      <div className='w-main m-auto mt-8'>
+      {!isQuickView && <div className='w-main m-auto mt-8'>
         <ProductInfo
           totalRatings={product?.totalRatings}
           ratings={product?.ratings}
@@ -219,8 +234,9 @@ const DetailProduct = () => {
           pid={product?._id}
           rerender={rerender}
         />
-      </div>
-      <div className='w-main m-auto my-6'>
+      </div>}
+
+      {!isQuickView && <div className='w-main m-auto my-6'>
         <h3 className='text-[20px] font-semibold py-[15px] uppercase border-main border-b-2'>OTHER CUSTOMERS ALSO BUY:</h3>
         {/* <CustomSlider products={relatedProducts} normal={true}/> */}
         <Slider {...setting} className='mt-4'>
@@ -234,7 +250,7 @@ const DetailProduct = () => {
             />
           ))}
         </Slider>
-      </div>
+      </div>}
     </div>
   )
 }

@@ -333,31 +333,48 @@ const createUsers = asyncHandler(async (req, res) => {
 
 const updateCart = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    const { pid, quantity, color } = req.body;
-    if (!pid || !quantity || !color) throw new Error('Missing inputs');
+    const { pid, quantity = 1, color } = req.body;
+    if (!pid || !color) throw new Error('Missing inputs');
     const user = await User.findById(_id).select('cart')
     const alreadyExistsProduct = user?.cart?.find(el => el.product.toString() === pid);
     if (alreadyExistsProduct) {
-        if (alreadyExistsProduct.color === color) {
-            const response = await User.updateOne({ cart: { $elemMatch: alreadyExistsProduct } }, { $set: { "cart.$.quantity": quantity } }, { new: true });
-            return res.status(200).json({
-                success: response ? true : false,
-                updatedCart: response ? response : 'Some thing went wrong'
-            })
-        } else {
-            const response = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity, color } } }, { new: true });
-            return res.status(200).json({
-                success: response ? true : false,
-                updatedCart: response ? response : 'Some thing went wrong'
-            })
-        }
+        const response = await User.updateOne({ cart: { $elemMatch: alreadyExistsProduct } }, { $set: { "cart.$.quantity": quantity, "cart.$.color": color } }, { new: true });
+        return res.status(200).json({
+            success: response ? true : false,
+            mes: response ? 'Updated your cart' : 'Some thing went wrong'
+        })
+
     } else {
         const response = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity, color } } }, { new: true });
         return res.status(200).json({
             success: response ? true : false,
-            updatedCart: response ? response : 'Some thing went wrong'
+            mes: response ? 'Updated your cart' : 'Some thing went wrong'
         })
     }
+});
+
+const removeProductInCart = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { pid, color } = req.params;
+    const user = await User.findById(_id).select("cart");
+    const alreadyProduct = user?.cart?.find(
+        (el) => el.product.toString() === pid && el.color === color
+    );
+    if (!alreadyProduct){
+        return res.status(200).json({
+            success: true,
+            mes: "Updated your cart",
+        });
+    }
+    const response = await User.findByIdAndUpdate(
+        _id,
+        { $pull: { cart: { product: pid, color } } },
+        { new: true }
+    );
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? "Deleted" : "Some thing went wrong",
+    });
 });
 
 module.exports = {
@@ -375,5 +392,6 @@ module.exports = {
     updateUserByAdmin,
     updateUserAddress,
     updateCart,
-    createUsers
+    createUsers, 
+    removeProductInCart
 }

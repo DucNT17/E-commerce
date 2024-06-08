@@ -54,7 +54,7 @@ const Header = () => {
           <div className='flex items-center justify-center gap-2 px-6 border-r cursor-pointer'>
             <LuShoppingBag color='red' />
             <span>
-              0 item(s)
+              {`${current?.cart?.length || 0} item(s)`}
             </span>
           </div>
           <div

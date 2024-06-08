@@ -1,14 +1,14 @@
 import React, { memo, useState } from 'react'
-import { productInfoTabs } from '../../utils/contants'
+import { productInfoTabs } from 'utils/contants'
 import { Votebar, Button, VoteOption, Comment } from '..'
-import { renderStarFromNumber } from '../../utils/helper'
-import { apiRatings } from '../../apis'
+import { renderStarFromNumber } from 'utils/helper'
+import { apiRatings } from 'apis'
 import { useDispatch, useSelector } from 'react-redux'
-import { showModal } from '../../store/app/appSlice'
+import { showModal } from 'store/app/appSlice'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
-import path from '../../utils/path'
+import path from 'utils/path'
 
 const ProductInfo = ({ totalRatings, ratings, nameProduct, pid, rerender }) => {
     const navigate = useNavigate();

@@ -19,9 +19,10 @@ const Products = () => {
   const [activeClick, setActiveClick] = useState(null);
   const [params] = useSearchParams();
   const [sort, setSort] = useState('')
-  // console.log(params.entries());
+
+
   const fetchProductsByCategory = async (queries) => {
-    const response = await apiGetProducts({ ...queries, limit: process.env.REACT_APP_LIMIT });
+    const response = await apiGetProducts({ ...queries, limit: process.env.REACT_APP_LIMIT, category });
     if (response.success) {
       setProducts(response);
     }

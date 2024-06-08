@@ -5,6 +5,7 @@ import laptop1 from 'assets/laptop1.png'
 import laptop2 from 'assets/laptop2.png'
 import { getNewProducts } from 'store/products/asyncActions'
 import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 
 const tabs = [
     { id: 1, name: 'best seller' },
@@ -17,6 +18,7 @@ const BestSeller = () => {
     const [products, setProducts] = useState(null);
     const dispath = useDispatch();
     const { newProducts } = useSelector(state => state.products)
+    const { isShowModal } = useSelector(state => state.appReducer)
 
     const fetchProducts = async () => {
         const response = await apiGetProducts({ sort: '-sold' })
@@ -38,7 +40,7 @@ const BestSeller = () => {
         }
     }, [activedTab, bestSellers, newProducts])
     return (
-        <div>
+        <div className={clsx(isShowModal ? 'hidden' : 'block')}>
             <div className='flex text-[23px] ml-[-32px]'>
                 {tabs.map(el => (
                     <span

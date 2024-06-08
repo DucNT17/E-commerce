@@ -1,5 +1,5 @@
 import { RiPhoneFill, RiBillLine, RiCoupon3Fill } from "react-icons/ri";
-import { MdEmail, MdSpaceDashboard, MdCategory, MdGroups } from "react-icons/md";
+import { MdEmail, MdSpaceDashboard, MdCategory, MdGroups, MdOutlineAddShoppingCart } from "react-icons/md";
 import { LuShoppingBag } from "react-icons/lu";
 import { FaUserCircle, 
     FaHeart, 
@@ -24,6 +24,8 @@ import {
 import { IoIosArrowForward } from "react-icons/io";
 import { TbBrandProducthunt } from "react-icons/tb";
 import { FaHeartCirclePlus } from "react-icons/fa6";
+import { BsCartPlus, BsCartCheckFill, BsFillCartPlusFill } from "react-icons/bs";
+
 
 const icons = {
     RiPhoneFill,
@@ -53,7 +55,11 @@ const icons = {
     FaHistory, 
     FaShoppingCart, 
     FaUserEdit,
-    FaHeartCirclePlus
+    FaHeartCirclePlus,
+    BsCartPlus, 
+    MdOutlineAddShoppingCart,
+    BsFillCartPlusFill,
+    BsCartCheckFill
 }
 
 export default icons;
