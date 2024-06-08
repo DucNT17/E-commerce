@@ -1,14 +1,25 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useSearchParams, createSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import {
+    useSearchParams,
+    createSearchParams,
+    useNavigate,
+    useLocation
+} from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { InputForm, Pagination } from 'components'
+import {
+    InputForm,
+    Pagination,
+    CustomizeVarriant
+} from 'components'
 import useDebounce from "hooks/useDebounce";
 import UpdateProduct from "./UpdateProduct";
 import { BiEdit, BiCustomize } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { apiGetProducts } from 'apis';
+import { apiGetProducts, apiDeleteProduct } from 'apis';
 import moment from 'moment'
 import { formatPriceVN, formatPriceUSD } from 'utils/helper'
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 const ManageProduct = () => {
     const [params] = useSearchParams();
@@ -25,6 +36,7 @@ const ManageProduct = () => {
     const [counts, setCounts] = useState(0);
     const [update, setUpdate] = useState(false);
     const [editProduct, setEditProduct] = useState(null);
+    const [customizeVarriant, setCustomizeVarriant] = useState(null);
 
     const render = useCallback(() => {
         setUpdate(!update);
@@ -55,16 +67,44 @@ const ManageProduct = () => {
     useEffect(() => {
         const searchParams = Object.fromEntries([...params]);
         fetchProducts(searchParams);
-    }, [params])
+    }, [params, update])
+
+
+    const handleDeleteProduct = (pid) => {
+        Swal.fire({
+            icon: "warning",
+            title: "Delete product",
+            text: "Are you sure to remove this product",
+            cancelButtonText: "Cancel",
+            confirmButtonText: "Confirm",
+            showCancelButton: true,
+        }).then(async (rs) => {
+            if (rs.isConfirmed) {
+                const response = await apiDeleteProduct(pid);
+                if (response.success) toast.success(response.mes);
+                else toast.error(response.mes);
+                render();
+            }
+        });
+    };
 
     return (
         <div className='w-full flex flex-col gap-4 relative z-50'>
             {editProduct && (
-                <div className="absolute w-full p-4 inset-0 h-full bg-gray-100 z-50">
+                <div className="absolute inset-0 h-full bg-gray-100 z-50">
                     <UpdateProduct
                         editProduct={editProduct}
                         render={render}
                         setEditProduct={setEditProduct}
+                    />
+                </div>
+            )}
+            {customizeVarriant && (
+                <div className="absolute inset-0 h-full bg-gray-100 z-50 ">
+                    <CustomizeVarriant
+                        customizeVarriant={customizeVarriant}
+                        render={render}
+                        setCustomizeVarriant={setCustomizeVarriant}
                     />
                 </div>
             )}
@@ -97,6 +137,7 @@ const ManageProduct = () => {
                             <th className="text-center py-2">Sold</th>
                             <th className="text-center py-2">Color</th>
                             <th className="text-center py-2">Total Ratings</th>
+                            <th className="text-center py-2">Varriants</th>
                             <th className="text-center py-2">Updated At</th>
                             <th className="text-center py-2">Actions</th>
                         </tr>
@@ -120,19 +161,23 @@ const ManageProduct = () => {
                                 <td className="text-center py-2">{el.sold}</td>
                                 <td className="text-center py-2">{el.color}</td>
                                 <td className="text-center py-2">{el.totalRatings}</td>
+                                <td className="text-center py-2">{el?.varriants?.length || 0}</td>
                                 <td className="text-center py-2">{moment(el.updatedAt).format("DD/MM/YYYY")}</td>
                                 <td className='text-center py-2'>
                                     <span
                                         className='text-blue-500 hover:text-orange-500 inline-block hover:underline cursor-pointer px-1'
+                                        onClick={() => setEditProduct(el)}
                                     >
                                         <BiEdit size={20} />
                                     </span >
                                     <span
+                                        onClick={() => handleDeleteProduct(el._id)}
                                         className='text-blue-500 hover:text-orange-500 inline-block hover:underline cursor-pointer px-1'
                                     >
                                         <RiDeleteBin6Line size={20} />
                                     </span>
                                     <span
+                                        onClick={() => setCustomizeVarriant(el)}
                                         className='text-blue-500 hover:text-orange-500 inline-block hover:underline cursor-pointer px-1'
                                     >
                                         <BiCustomize size={20} />

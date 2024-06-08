@@ -2,6 +2,7 @@ import path from './path'
 import icons from './icons'
 
 
+
 export const navigation = [
     {
         id: 1,
@@ -276,6 +277,39 @@ export const adminSidebar = [
         text: "User",
         path: `/${path.ADMIN}/${path.MANAGE_USER}`,
         icon: <MdGroups size={20} />,
+    },
+];
+
+const {FaUserEdit, FaShoppingCart, FaHistory, FaHeartCirclePlus} = icons
+
+export const memberSidebar = [
+    {
+        id: 1,
+        type: "SINGLE",
+        text: "Persional",
+        path: `/${path.MEMBER}/${path.PERSONAL}`,
+        icon: <FaUserEdit size={20} />,
+    },
+    {
+        id: 2,
+        type: "SINGLE",
+        text: "My cart",
+        path: `/${path.MEMBER}/${path.MY_CART}`,
+        icon: <FaShoppingCart size={20} />,
+    },
+    {
+        id: 4,
+        type: "SINGLE",
+        text: "Buy history",
+        path: `/${path.MEMBER}/${path.HISTORY}`,
+        icon: <FaHistory size={20} />,
+    },
+    {
+        id: 40,
+        type: "SINGLE",
+        text: "Wishlist",
+        path: `/${path.MEMBER}/${path.WISHLIST}`,
+        icon: <FaHeartCirclePlus size={20} />,
     },
 ];
 

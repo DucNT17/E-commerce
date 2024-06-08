@@ -9,18 +9,28 @@ routes.post('/', [verifyAccessToken, isAdmin],
         { name: 'images', maxCount: 10 },
         { name: 'thumb', maxCount: 1 }
     ]), product.createProduct);
-    
+
 routes.get('/', product.getProducts);
 
 routes.put('/ratings', [verifyAccessToken], product.ratings);
 
 routes.post('/image/:pid', [verifyAccessToken, isAdmin], uploader.fields([
-    { name: 'image', maxCount: 10 },
+    { name: 'images', maxCount: 10 },
     { name: 'thumb', maxCount: 1 }
 ]), product.uploadImageProduct);
-routes.put('/:pid', [verifyAccessToken, isAdmin], product.updateProduct);
-routes.delete('/:pid', [verifyAccessToken, isAdmin], product.deleteProduct);
+
+routes.put('/varriant/:pid', [verifyAccessToken, isAdmin], uploader.fields([
+    { name: 'images', maxCount: 10 },
+    { name: 'thumb', maxCount: 1 }
+]), product.addVarriant);
+
+routes.put('/:pid', [verifyAccessToken, isAdmin], uploader.fields([
+    { name: 'images', maxCount: 10 },
+    { name: 'thumb', maxCount: 1 }
+]), product.updateProduct);
+
 routes.get('/:pid', product.getProduct);
+routes.delete('/:pid', [verifyAccessToken, isAdmin], product.deleteProduct);
 
 
 module.exports = routes;

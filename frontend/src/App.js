@@ -23,7 +23,10 @@ import {
 
 import {
   MemberLayout,
-  Personal
+  Personal,
+  MyCart,
+  Wishlist,
+  History
 } from './pages/member'
 import path from './utils/path';
 import { getCategories } from './store/app/asyncActions';
@@ -70,6 +73,9 @@ function App() {
 
         <Route path={path.MEMBER} element={<MemberLayout />}>
           <Route path={path.PERSONAL} element={<Personal />} />
+          <Route path={path.MY_CART} element={<MyCart />} />
+          <Route path={path.HISTORY} element={<History />} />
+          <Route path={path.WISHLIST} element={<Wishlist />} />
 
         </Route>
 

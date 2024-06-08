@@ -50,3 +50,9 @@ export const apiDeleteUser = (uid) => axios({
     url: `/user/` + uid,
     method: "DELETE",
 })
+
+export const apiUpdateCurrent = (data) => axios({
+    url: `/user/current`,
+    method: "PUT",
+    data,
+})

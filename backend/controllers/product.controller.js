@@ -1,7 +1,7 @@
 const Product = require('../models/product.model');
 const asyncHandler = require('express-async-handler');
 const slugify = require('slugify');
-
+const makeSKU = require('uniqid')
 
 const createProduct = asyncHandler(async (req, res) => {
     const { title, price, description, brand, category, color } = req.body;
@@ -78,7 +78,7 @@ const getProducts = asyncHandler(async (req, res) => {
             ]
         }
     }
-    const qr = { ...formatedQueries, ...colorQueryObject, ...queryObject}
+    const qr = { ...formatedQueries, ...colorQueryObject, ...queryObject }
     let queryCommand = Product.find(qr);
 
     // Sorting 
@@ -133,13 +133,17 @@ const getProducts = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params;
+    const files = req?.files;
+    if (files?.thumb) req.body.thumb = files?.thumb[0]?.path;
+    if (files?.images) req.body.images = files?.images?.map((el) => el.path);
+
     if (req.body && req.body.title) {
         req.body.slug = slugify(req.body.title);
     }
     const updatedProduct = await Product.findByIdAndUpdate(pid, req.body, { new: true });
     return res.status(200).json({
         success: updatedProduct ? true : false,
-        updatedProduct: updatedProduct ? updatedProduct : 'Cannot update product'
+        mes: updatedProduct ? "Updated product successful" : 'Cannot update product'
     });
 })
 
@@ -148,7 +152,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
     const deletedProduct = await Product.findByIdAndDelete(pid)
     return res.status(200).json({
         success: deletedProduct ? true : false,
-        deletedProduct: deletedProduct ? deletedProduct : 'Cannot delete product'
+        mes: deletedProduct ? 'Deleted product successful' : 'Cannot delete product'
     })
 })
 
@@ -183,7 +187,7 @@ const ratings = asyncHandler(async (req, res) => {
     await updatedProduct.save();
 
     return res.status(200).json({
-        status: true,
+        success: true,
         updatedProduct
     })
 })
@@ -193,9 +197,28 @@ const uploadImageProduct = asyncHandler(async (req, res) => {
     if (!req.files) throw new Error("Missing input");
     const response = await Product.findByIdAndUpdate(pid, { $push: { images: { $each: req.files.map(el => el.path) } } }, { new: true })
     return res.status(200).json({
-        status: response ? true : false,
+        success: response ? true : false,
         updatedProduct: response ? response : "Cannot upload images product"
     })
+});
+
+const addVarriant = asyncHandler(async (req, res) => {
+    const { pid } = req.params;
+    const { title, price, color } = req.body;
+    const thumb = req?.files?.thumb[0]?.path;
+    const images = req.files?.images?.map((el) => el.path);
+    if (!(title && price && color)) throw new Error("Missing input");
+    const response = await Product.findByIdAndUpdate(pid, {
+        $push: {
+            varriants: { color, price, title, thumb, images, sku: makeSKU().toUpperCase() },
+        }
+    },
+        { new: true }
+    );
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? "Add varriant successfull" : "Somthing went wrongs",
+    });
 });
 
 module.exports = {
@@ -205,5 +228,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     ratings,
-    uploadImageProduct
+    uploadImageProduct,
+    addVarriant
 }

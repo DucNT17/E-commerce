@@ -256,13 +256,6 @@ const CreateProduct = () => {
                                         alt="product"
                                         className="w-[200px] object-contain"
                                     />
-                                    {/* {hoverElm === el.name &&
-                                        <div
-                                            onClick={() => handleRemoveImage(el.name)}
-                                            className='absolute cursor-pointer inset-0 bg-black-rgba-50 flex items-center justify-center'>
-                                            <FaTrash size={32} color="white" />
-                                        </div>} */}
-
                                 </div>
                             ))}
                         </div>

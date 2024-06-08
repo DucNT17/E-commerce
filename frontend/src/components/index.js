@@ -36,3 +36,5 @@ export { default as Select } from './inputs/Select';
 export { default as InputFieldLogin } from './inputs/InputFieldLogin';
 export { default as ButtonV2 } from './button/ButtonV2';
 export { default as MarkdownEditor } from './inputs/MarkdownEditor';
+export { default as CustomizeVarriant } from './products/CustomizeVarriant';
+export { default as MemberSidebar } from './sidebar/MemberSidebar';

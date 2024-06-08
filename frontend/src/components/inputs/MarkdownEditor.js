@@ -10,8 +10,6 @@ const MarkdownEditor = ({
     setInvalidFields,
     setIsFocusDescription,
 }) => {
-    // console.log(invalidFields?.some((el) => el.name === name));
-    // console.log({ invalidFields, name });
     return (
         <div className="flex flex-col ">
             <span className="">{label}</span>
