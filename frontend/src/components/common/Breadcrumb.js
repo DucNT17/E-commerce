@@ -5,9 +5,10 @@ import icons from 'utils/icons'
 
 const { IoIosArrowForward } = icons
 
-const Breadcrumb = ({ title, category }) => {
+const Breadcrumb = ({ title, category, product }) => {
     const routes = [
         { path: "/:category", breadcrumb: category },
+        { path: `/${product}`, breadcrumb: "Product" }, 
         { path: "/", breadcrumb: "Home" },
         { path: "/:category/:pid/:title", breadcrumb: title },
     ];

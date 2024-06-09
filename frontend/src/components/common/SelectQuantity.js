@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai'
 
 const SelectQuantity = ({ quantity, handleQuantity, handleChangeQuantity }) => {
 

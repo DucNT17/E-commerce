@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import path from 'utils/path'
 
-const { AiFillEye, FaHeart, BsCartPlus, BsCartCheckFill, BsFillCartPlusFill } = icons
+const { AiFillEye, FaHeart, BsCartCheckFill, BsFillCartPlusFill } = icons
 
 const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
 
@@ -33,13 +33,21 @@ const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
           cancelButtonText: 'Not now!',
           confirmButtonText: 'Go login'
         }).then((rs) => {
-          if(rs.isConfirmed){
+          if (rs.isConfirmed) {
             navigate(`/${path.LOGIN}`)
           }
-        }) 
+        })
       }
 
-      const response = await apiUpdateCart({ pid: productData._id, color: productData.color });
+      const response = await apiUpdateCart({
+        pid: productData._id,
+        color: productData.color,
+        quantity: 1,
+        price: productData?.price,
+        thumbnail: productData?.thumb,
+        title: productData?.title
+      });
+      
       if (response.success) {
         toast.success(response.mes);
         dispatch(getCurrent())
@@ -70,7 +78,7 @@ const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
         <div className='w-full relative'>
           {isShowOption && <div className='absolute bottom-[-10px] left-0 right-0 flex justify-center gap-3 animate-slide-top'>
             <span title='Quich view' onClick={(e) => handleClickOptions(e, 'QUICK_VIEW')}><SelectOption icon={<AiFillEye />} /></span>
-            {current?.cart?.some(el => el.product === productData._id.toString())
+            {current?.cart?.some(el => el.product?._id === productData._id.toString())
               ? <span title='Added to cart'>
                 <SelectOption icon={<BsCartCheckFill color='green' />} />
               </span>

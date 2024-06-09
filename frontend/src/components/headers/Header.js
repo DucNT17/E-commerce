@@ -3,19 +3,20 @@ import logo from 'assets/logo.png'
 import icons from 'utils/icons'
 import { Link } from 'react-router-dom'
 import path from 'utils/path'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { logout } from 'store/user/userSlice'
+import withBaseComponent from 'hocs/withBaseComponent'
+import { showCart } from 'store/app/appSlice'
 
 const { RiPhoneFill, MdEmail, LuShoppingBag, FaUserCircle } = icons;
 
-const Header = () => {
-  const dispatch = useDispatch();
+const Header = ({ dispatch }) => {
   const { current } = useSelector(state => state.user);
   const [isShowOptions, setIsShowOption] = useState(false);
   useEffect(() => {
     const handleClickoutOptions = (e) => {
       const profile = document.getElementById('profile');
-      if(!profile?.contains(e.target)) {
+      if (!profile?.contains(e.target)) {
         setIsShowOption(false);
       }
     }
@@ -51,7 +52,7 @@ const Header = () => {
           </span>
         </div>
         {current && <Fragment>
-          <div className='flex items-center justify-center gap-2 px-6 border-r cursor-pointer'>
+          <div onClick={() => dispatch(showCart({ signal: true }))} className='flex items-center justify-center gap-2 px-6 border-r cursor-pointer'>
             <LuShoppingBag color='red' />
             <span>
               {`${current?.cart?.length || 0} item(s)`}
@@ -72,7 +73,7 @@ const Header = () => {
               {+current?.role === 1 && <Link className='p-2 w-full hover:bg-sky-100 border-b-2 font-semibold' to={`/${path.ADMIN}/${path.DASHBOARD}`}>
                 Admin workspace
               </Link>}
-              <span className='p-2 w-full hover:bg-sky-100 font-semibold'  onClick={() => dispatch(logout())}>
+              <span className='p-2 w-full hover:bg-sky-100 font-semibold' onClick={() => dispatch(logout())}>
                 Logout
               </span>
             </div>}
@@ -83,4 +84,4 @@ const Header = () => {
   )
 }
 
-export default memo(Header)
+export default withBaseComponent(memo(Header))

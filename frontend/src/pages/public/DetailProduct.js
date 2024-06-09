@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
-import { apiGetProduct, apiGetProducts } from 'apis';
+import { createSearchParams, useParams } from 'react-router-dom'
+import { apiGetProduct, apiGetProducts, apiUpdateCart } from 'apis';
 import {
   Breadcrumb,
   Button,
@@ -14,6 +14,12 @@ import { renderStarFromNumber, formatPriceVN } from 'utils/helper';
 import { productExtraInfo } from 'utils/contants'
 import DOMPurify from 'dompurify';
 import clsx from 'clsx';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import path from 'utils/path';
+import { getCurrent } from 'store/user/asyncActions';
+import { toast } from 'react-toastify';
+import withBaseComponent from 'hocs/withBaseComponent';
 
 const settings = {
   dots: false,
@@ -31,8 +37,8 @@ const setting = {
   slidesToScroll: 1
 };
 
-const DetailProduct = ({ isQuickView, data }) => {
-
+const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
+  const { current } = useSelector(state => state.user);
   const params = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -84,6 +90,14 @@ const DetailProduct = ({ isQuickView, data }) => {
         images: product?.varriants?.find(el => el.sku === varriant)?.images,
         thumb: product?.varriants?.find(el => el.sku === varriant)?.thumb,
       })
+    } else {
+      setCurrentProduct({
+        title: product?.title,
+        color: product?.color,
+        images: product?.images || [],
+        price: product?.price,
+        thumb: product?.thumb
+      })
     }
   }, [varriant])
 
@@ -102,9 +116,11 @@ const DetailProduct = ({ isQuickView, data }) => {
   }, [update]);
 
 
-  const handleQuantity = useCallback((number) => {
-    setQuantity(number);
-  }, [quantity]);
+  const handleQuantity = (number) => {
+    if (+number > 1) {
+      setQuantity(number);
+    }
+  }
 
   const handleChangeQuantity = useCallback((flag) => {
     if (flag === 'minus' && quantity === 1) return;
@@ -121,7 +137,40 @@ const DetailProduct = ({ isQuickView, data }) => {
     setUpdate(!update);
   }, [update]);
 
-  console.log(product);
+  // console.log(product);
+  const handleAddToCart = async () => {
+    if (!current) {
+      return Swal.fire({
+        title: 'Almost...',
+        text: 'Please login first',
+        icon: 'info',
+        showCancelButton: true,
+        cancelButtonText: 'Not now!',
+        confirmButtonText: 'Go login'
+      }).then((rs) => {
+        if (rs.isConfirmed) {
+          navigate({
+            pathname: `/${path.LOGIN}`,
+            search: createSearchParams({ redirect: location.pathname }).toString(),
+          })
+        }
+      })
+    }
+    const response = await apiUpdateCart({
+      pid,
+      color: currentProduct.color || product?.color,
+      quantity,
+      price: currentProduct.price || product?.price,
+      thumbnail: currentProduct.thumb || product?.thumb,
+      title: currentProduct.title || product?.title,
+    });
+    if (response.success) {
+      toast.success(response.mes);
+      dispatch(getCurrent())
+    } else {
+      toast.error(response.mes)
+    }
+  }
   return (
     <div className={clsx('w-full')}>
       {!isQuickView && <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
@@ -132,7 +181,7 @@ const DetailProduct = ({ isQuickView, data }) => {
       </div>}
       <div onClick={e => e.stopPropagation()}
         className={clsx('bg-white m-auto mt-4 flex', isQuickView ? 'max-w-[900px] gap-16 p-8 max-h-[90vh] overflow-y-auto' : 'w-main')}>
-        <div className={clsx('w-2/5 flex flex-col gap-4', isQuickView && 'w-1/2')}>
+        <div className={clsx('flex flex-col gap-4', isQuickView ? 'w-1/2' : 'w-2/5')}>
           <div className='h-[458px] w-[458px] border overflow-hidden flex items-center'>
             <img src={currentProduct?.thumb || currentImage} alt='product-thumb' />
           </div>
@@ -153,7 +202,7 @@ const DetailProduct = ({ isQuickView, data }) => {
           </div>
 
         </div>
-        <div className={clsx('w-2/5 flex flex-col gap-4 pr-[24px]', isQuickView && 'w-1/2')}>
+        <div className={clsx('flex flex-col gap-4 pr-[24px]', isQuickView ? 'w-1/2' : 'w-2/5')}>
           <div className='flex items-center justify-between'>
             <h2 className='text-[30px] font-semibold'>{`${formatPriceVN(currentProduct?.price || product?.price)}`}</h2>
             <span className='text-sm text-main italic'>
@@ -192,7 +241,7 @@ const DetailProduct = ({ isQuickView, data }) => {
                 <div
                   onClick={() => setVarriant(el?.sku)}
                   className={clsx('flex items-center gap-2 p-2 border rounded-md cursor-pointer', varriant === el.sku && 'border-main')}
-                  key={el._id}
+                  key={el.sku}
                 >
                   <img src={el?.thumb} alt='thumb' className='w-8 h-8 object-cover rounded-md' />
                   <span className='flex flex-col'>
@@ -209,7 +258,7 @@ const DetailProduct = ({ isQuickView, data }) => {
               <span className='font-semibold'>Quantity</span>
               <SelectQuantity quantity={quantity} handleQuantity={handleQuantity} handleChangeQuantity={handleChangeQuantity} />
             </div>
-            <Button fw>
+            <Button handleOnClick={handleAddToCart} fw>
               ADD TO CART
             </Button>
           </div>
@@ -255,4 +304,4 @@ const DetailProduct = ({ isQuickView, data }) => {
   )
 }
 
-export default DetailProduct
+export default withBaseComponent(DetailProduct)

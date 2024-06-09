@@ -20,7 +20,7 @@ routes.delete('/:uid', [verifyAccessToken, isAdmin], user.deleteUser)
 
 routes.put('/resetpassword', user.resetPassword)
 routes.put('/cart', [verifyAccessToken], user.updateCart)
-routes.delete('/remove-cart/:pid', [verifyAccessToken], user.removeProductInCart)
+routes.delete('/remove-cart/:pid/:color', [verifyAccessToken], user.removeProductInCart)
 routes.put('/current', verifyAccessToken,uploader.single('avatar'), user.updateUser)
 routes.put('/address', [verifyAccessToken], user.updateUserAddress)
 routes.put('/:uid', [verifyAccessToken, isAdmin], user.updateUserByAdmin)

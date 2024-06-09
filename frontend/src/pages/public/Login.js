@@ -8,7 +8,7 @@ import {
   apiFinalRegister
 } from 'apis'
 import Swal from 'sweetalert2'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import path from 'utils/path'
 import { login } from 'store/user/userSlice'
 import { showModal } from 'store/app/appSlice'
@@ -30,6 +30,7 @@ const Login = () => {
   const [invalidFields, setInvalidFields] = useState([])
   const [isRegister, setIsRegister] = useState(false);
   const [isForgotPassWord, setisForgotPassWord] = useState(false);
+  const [searchParams] = useSearchParams();
   const resetPayload = () => {
     setPayload({
       email: '',
@@ -76,7 +77,7 @@ const Login = () => {
         if (rs.success) {
           Swal.fire('Login successfully', rs.mes, 'success').then(() => {
             dispatch(login({ isLoggedIn: true, token: rs.accessToken, userData: rs.userData }));
-            navigate(`/${path.HOME}`);
+            searchParams.get('redirect') ? navigate(searchParams.get('redirect')) : navigate(`/${path.HOME}`);
           });
         } else {
           Swal.fire('Oops', rs.mes, 'error')

@@ -32,7 +32,7 @@ const Footer = () => {
                         <h3 className='mb-[20px] text-[15px] font-medium border-l-2 border-main pl-[15px]'>ABOUT US</h3>
                         <span>
                             <span>Address: </span>
-                            <span className='opacity-70'>474 Ontario St Toronto, ON M4X 1M7 Canada</span>
+                            <span className='opacity-70'>Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội.</span>
                         </span>
                         <span>
                             <span>Phone: </span>
@@ -40,7 +40,7 @@ const Footer = () => {
                         </span>
                         <span>
                             <span>Mail: </span>
-                            <span className='opacity-70'>tadathemes@gmail.com</span>
+                            <span className='opacity-70'>tienducnguyen174@gmail.com</span>
                         </span>
 
                     </div>
