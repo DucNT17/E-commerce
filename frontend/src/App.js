@@ -9,7 +9,7 @@ import {
   FAQ,
   Services,
   FinalRegister,
-  ResetPassword, 
+  ResetPassword,
   DetailCart
 } from './pages/public';
 import {
@@ -27,8 +27,10 @@ import {
   Personal,
   MyCart,
   Wishlist,
-  History
+  History,
+  Checkout
 } from './pages/member'
+
 import path from './utils/path';
 import { getCategories } from './store/app/asyncActions';
 import { useDispatch, useSelector } from 'react-redux'
@@ -56,7 +58,7 @@ function App() {
       <Routes>
         <Route path={path.LOGIN} element={<Login />} />
         <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
-
+        <Route path={path.CHECKOUT} element={<Checkout />} />
         <Route path={path.PUBLIC} element={<Public />}>
           <Route path={path.HOME} element={<Home />} />
           <Route path={path.BLOGS} element={<Blog />} />
@@ -83,6 +85,7 @@ function App() {
           <Route path={path.MY_CART} element={<MyCart />} />
           <Route path={path.HISTORY} element={<History />} />
           <Route path={path.WISHLIST} element={<Wishlist />} />
+
 
         </Route>
 

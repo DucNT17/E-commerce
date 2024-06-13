@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { createSearchParams, useParams } from 'react-router-dom'
 import { apiGetProduct, apiGetProducts, apiUpdateCart } from 'apis';
 import {
@@ -38,6 +38,7 @@ const setting = {
 };
 
 const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
+  const titleRef = useRef()
   const { current } = useSelector(state => state.user);
   const params = useParams();
   const [product, setProduct] = useState(null);
@@ -107,7 +108,8 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
       fetchProducts();
     }
     window.scrollTo(0, 0);
-  }, [pid]);
+    titleRef.current.scrollIntoView({ block: 'center' });
+  }, [pid, params.pid]);
 
   useEffect(() => {
     if (pid) {
@@ -174,7 +176,7 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
   return (
     <div className={clsx('w-full')}>
       {!isQuickView && <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
-        <div className='w-main'>
+        <div ref={titleRef} className='w-main'>
           <h3 className='font-semibold'>{currentProduct?.title || product?.title}</h3>
           <Breadcrumb title={currentProduct?.title || product?.title} category={category} />
         </div>

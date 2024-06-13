@@ -14,10 +14,11 @@ import { getCurrent } from 'store/user/asyncActions'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import path from 'utils/path'
+import { createSearchParams } from 'react-router-dom'
 
 const { AiFillEye, FaHeart, BsCartCheckFill, BsFillCartPlusFill } = icons
 
-const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
+const Product = ({ productData, isNew, normal, navigate, dispatch, location }) => {
 
   const [isShowOption, setIsShowOption] = useState(false);
   const { current } = useSelector(state => state.user)
@@ -34,7 +35,10 @@ const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
           confirmButtonText: 'Go login'
         }).then((rs) => {
           if (rs.isConfirmed) {
-            navigate(`/${path.LOGIN}`)
+            navigate({
+              pathname: `/${path.LOGIN}`,
+              search: createSearchParams({ redirect: location.pathname }).toString(),
+            })
           }
         })
       }
@@ -55,6 +59,7 @@ const Product = ({ productData, isNew, normal, navigate, dispatch }) => {
         toast.error(response.mes)
       }
     }
+
     if (flag === 'WISHLIST') {
       console.log('WISHLIST');
     }

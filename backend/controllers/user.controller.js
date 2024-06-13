@@ -341,15 +341,17 @@ const updateCart = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     const { pid, quantity = 1, color, price, thumbnail, title } = req.body;
     if (!pid || !color) throw new Error('Missing inputs');
-    const user = await User.findById(_id).select('cart')
-    const alreadyExistsProduct = user?.cart?.find(el => el.product.toString() === pid);
-    if (alreadyExistsProduct && alreadyExistsProduct.color === color) {
-        const response = await User.updateOne({ cart: { $elemMatch: alreadyExistsProduct } }, { $set: { 
-            "cart.$.quantity": quantity, 
-            "cart.$.price": price, 
-            "cart.$.thumbnail": thumbnail,
-            "cart.$.title": title,
-        } }, { new: true });
+    const user = await User.findById(_id).select('cart');
+    const alreadyProduct = user?.cart?.find(el => el.product.toString() === pid && el.color === color);
+    if (alreadyProduct) {
+        const response = await User.updateOne({ cart: { $elemMatch: alreadyProduct } }, {
+            $set: {
+                "cart.$.quantity": quantity,
+                "cart.$.price": price,
+                "cart.$.thumbnail": thumbnail,
+                "cart.$.title": title,
+            }
+        }, { new: true });
         return res.status(200).json({
             success: response ? true : false,
             mes: response ? 'Updated your cart' : 'Some thing went wrong'

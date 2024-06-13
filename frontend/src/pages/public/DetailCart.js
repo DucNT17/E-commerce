@@ -2,7 +2,9 @@ import { Breadcrumb, Button, OrderItem } from 'components';
 import withBaseComponent from 'hocs/withBaseComponent';
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom';
 import { formatPriceVN } from 'utils/helper';
+import path from 'utils/path';
 
 const DetailCart = ({ location, dispatch }) => {
     const { currentCart } = useSelector(state => state.user);
@@ -11,7 +13,7 @@ const DetailCart = ({ location, dispatch }) => {
             <div className='h-[81px] bg-gray-100 flex justify-center     items-center'>
                 <div className='w-main'>
                     <h3 className='font-semibold uppercase'>Detail Cart</h3>
-                    <Breadcrumb category={``} />
+                    <Breadcrumb category={location?.pathname?.replace('/', '')?.split('-')?.join(' ')} />
                 </div>
             </div>
             <div className='flex flex-col w-main mx-auto border my-8'>
@@ -25,8 +27,8 @@ const DetailCart = ({ location, dispatch }) => {
                         key={el._id}
                         color={el.color}
                         title={el.title}
-                        thumbnail={el.thumbnail}
                         pid={el.product?._id}
+                        thumbnail={el.thumbnail}
                         price={el.price}
                         defaultQuantity={el.quantity}
                     />
@@ -40,7 +42,7 @@ const DetailCart = ({ location, dispatch }) => {
                     </span>
                 </span>
                 <span className='text-sm italic'>Shipping, taxes, and discounts calculated at checkout.</span>
-                <Button>Checkout</Button>
+                <Link target='_blank' className='bg-main text-white px-4 py-2 rounded-md' to={`/${path.CHECKOUT}`}>Checkout</Link>
             </div>
 
         </div>

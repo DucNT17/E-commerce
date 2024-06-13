@@ -27,7 +27,6 @@ const Cart = ({ dispatch, navigate }) => {
         navigate(`/${path.DETAL_CART}`);
         dispatch(showCart());
     }
-    console.log(currentCart);
     return (
         <div onClick={e => e.stopPropagation()} className='w-[400px] h-screen bg-black grid grid-rows-10 text-white p-6'>
             <header className='border-b border-gray-500 flex justify-between items-center font-bold text-2xl row-span-1 h-full'>

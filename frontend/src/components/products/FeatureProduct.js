@@ -5,7 +5,7 @@ import { apiGetProducts } from 'apis'
 const FeatureProduct = () => {
     const [product, setProduct] = useState(null);
     const fetchProduct = async () => {
-        const response = await apiGetProducts({ limit: 9, totalRatings: 5 });
+        const response = await apiGetProducts({ limit: 9 });
         if (response.success) {
             setProduct(response.products);
         }
