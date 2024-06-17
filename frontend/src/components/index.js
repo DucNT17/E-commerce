@@ -40,3 +40,5 @@ export { default as CustomizeVarriant } from './products/CustomizeVarriant';
 export { default as MemberSidebar } from './sidebar/MemberSidebar';
 export { default as Cart } from './products/Cart';
 export { default as OrderItem } from './products/OrderItem';
+export { default as PayPal } from './common/Paypal';
+export { default as Congrat } from './common/Congrat';

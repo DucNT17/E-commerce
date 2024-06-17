@@ -22,7 +22,10 @@ const Products = () => {
 
 
   const fetchProductsByCategory = async (queries) => {
-    const response = await apiGetProducts({ ...queries, limit: process.env.REACT_APP_LIMIT, category });
+    if (category && category !== 'products') {
+      queries.category = category;
+    }
+    const response = await apiGetProducts({ ...queries, limit: process.env.REACT_APP_LIMIT });
     if (response.success) {
       setProducts(response);
     }

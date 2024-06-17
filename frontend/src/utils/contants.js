@@ -334,3 +334,46 @@ export const blockStatus = [
         value: 'Active',
     }
 ]
+
+export const statusOrdersUser = [
+    {
+        value: "0",
+        label: "Đã Hủy",
+    },
+    {
+        value: "1",
+        label: "Đang xử lý",
+    },
+    {
+        value: "2",
+        label: "Đang giao",
+    },
+    {
+        value: "3",
+        label: "Hoàn thành",
+    },
+];
+
+export const statusTexts = ["Đã hủy", "Đang xử lý", "Đang giao", "Hoàn thành", "Đã xác nhận"];
+
+export const statusColor = [
+    "bg-red-600",
+    "bg-gray-500",
+    "bg-yellow-400",
+    "bg-green-400",
+];
+
+export const getStatusClass = (status) => {
+    switch (status) {
+        case 0:
+            return "bg-gray-200"; // Ẩn
+        case 1:
+            return "bg-green-200"; // Đang chạy
+        case 2:
+            return "bg-red-200"; // Đã dừng
+        default:
+            return "";
+    }
+};
+
+export const imageSlider = {};

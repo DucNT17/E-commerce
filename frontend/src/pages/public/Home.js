@@ -8,7 +8,7 @@ import {
   NewArrival,
   HotCollections,
   BlogPosts
-} from '../../components'
+} from 'components'
 
 
 const Home = () => {

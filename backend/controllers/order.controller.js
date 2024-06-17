@@ -5,22 +5,37 @@ const asyncHandler = require('express-async-handler');
 
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    const { coupon } = req.body;
-    const userCart = await User.findById(_id).select("cart").populate("cart.product", "title price");
-    const products = userCart?.cart?.map(el => ({
-        product: el.product._id,
-        count: el.quantity,
-        color: el.color
-    }))
-    let total = userCart?.cart?.reduce((sum, el) => sum + el.product.price * el.quantity, 0);
-    const validCoupon = await Coupon.findOne({ name: coupon });
-    if (coupon) {
-        total = Math.round(total * (1 - validCoupon.discount / 100) / 1000) * 1000;
+    const { products, total, address, status } = req.body;
+
+    if (address) {
+        await User.findByIdAndUpdate(_id, { address, cart: [] });
     }
-    const response = await Order.create({ products, total, orderBy: _id, coupon: validCoupon })
+
+    // const data = { products, total, orderBy: _id, coupon: coupon || null };
+    const data = { products, total, orderBy: _id };
+    if(status) {
+        data.status = status;
+    }
+    // if (coupon) {
+    //     const selectedCoupon = await Coupon.findById(coupon);
+    //     if (selectedCoupon.quantity <= 0) {
+    //         return res.status(200).json({
+    //             success: false,
+    //             mes: "Coupon invalid",
+    //         });
+    //     }
+    //     data.coupon = coupon;
+    //     await Coupon.findByIdAndUpdate(coupon, {
+    //         $inc: { quantity: -1, usageCount: 1 },
+    //     });
+    // }
+
+    // if (status) data.status = status;
+    const response = await Order.create(data);
+
     return res.json({
         success: response ? true : false,
-        order: response ? response : "Some thing went wrong",
+        mes: response ? response : "Some thing went wrong",
     })
 });
 

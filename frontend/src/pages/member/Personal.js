@@ -36,11 +36,10 @@ const Personal = () => {
         const formData = new FormData();
         if (data.avatar.length > 0) {
             formData.append("avatar", data.avatar[0]);
-        }   
+        }
         delete data.avatar;
         for (let i of Object.entries(data)) formData.append(i[0], i[1]);
         const response = await apiUpdateCurrent(formData);
-        console.log(response);
         if (response.success) {
             dispatch(getCurrent());
             toast.success(response.mes);

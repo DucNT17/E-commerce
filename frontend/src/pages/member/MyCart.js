@@ -1,11 +1,36 @@
-import { Button, OrderItem } from 'components';
+import { ButtonV2, OrderItem } from 'components';
 import withBaseComponent from 'hocs/withBaseComponent';
 import React from 'react'
 import { useSelector } from 'react-redux';
+import { Link, createSearchParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { formatPriceVN } from 'utils/helper';
+import path from 'utils/path';
 
-const MyCart = () => {
-    const { currentCart } = useSelector(state => state.user);
+const MyCart = ({ location, navigate }) => {
+    const { currentCart, current } = useSelector(state => state.user);
+    const handleSubmit = () => {
+        if (!current?.address) {
+            return Swal.fire({
+                icon: 'info',
+                title: 'Update address',
+                text: 'Please update your address before checkout',
+                showCancelButton: true,
+                showConfirmButton: true,
+                confirmButtonText: 'Go update address',
+                cancelButtonText: 'Not now',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate({
+                        pathname: `/${path.MEMBER}/${path.PERSONAL}`,
+                        search: createSearchParams({ redirect: location.pathname }).toString()
+                    })
+                }
+            })
+        } else {
+            window.open(`/${path.CHECKOUT}`, '_blank')
+        }
+    }
     return (
         <div className='w-full'>
             <header className="text-3xl font-semibold p-4 border-b border-b-blue-200">
@@ -37,7 +62,8 @@ const MyCart = () => {
                     </span>
                 </span>
                 <span className='text-sm italic'>Shipping, taxes, and discounts calculated at checkout.</span>
-                <Button>Checkout</Button>
+                <ButtonV2 handleOnClick={handleSubmit}>Checkout</ButtonV2>
+                {/* <Link target='_blank' className='bg-main text-white px-4 py-2 rounded-md' to={`/${path.CHECKOUT}`}>Checkout</Link>   */}
             </div>
         </div>
     )
