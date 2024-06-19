@@ -108,7 +108,9 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
       fetchProducts();
     }
     window.scrollTo(0, 0);
-    titleRef.current.scrollIntoView({ block: 'center' });
+    if (!isQuickView){
+      titleRef.current.scrollIntoView({ block: 'center' });
+    }
   }, [pid, params.pid]);
 
   useEffect(() => {
@@ -293,10 +295,10 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
         <Slider {...setting} className='mt-4'>
           {relatedProducts?.map((el, index) => (
             <Product
-              key={index}
+              key={el._id}
               pid={el._id}
               productData={el}
-              isNew={false}
+              // isNew={false}
               normal={true}
             />
           ))}

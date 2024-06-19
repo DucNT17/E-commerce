@@ -8,20 +8,30 @@ import icons from 'utils/icons'
 import withBaseComponent from 'hocs/withBaseComponent'
 import { showModal } from 'store/app/appSlice'
 import { DetailProduct } from 'pages/public'
-import { apiUpdateCart } from 'apis'
+import { apiUpdateCart, apiUpdateWishlist } from 'apis'
 import { toast } from 'react-toastify'
 import { getCurrent } from 'store/user/asyncActions'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import path from 'utils/path'
 import { createSearchParams } from 'react-router-dom'
+import clsx from 'clsx'
 
 const { AiFillEye, FaHeart, BsCartCheckFill, BsFillCartPlusFill } = icons
 
-const Product = ({ productData, isNew, normal, navigate, dispatch, location }) => {
+const Product = ({ 
+  productData, 
+  isNew, 
+  normal, 
+  navigate, 
+  dispatch, 
+  location, 
+  pid, 
+  className
+}) => {
 
   const [isShowOption, setIsShowOption] = useState(false);
-  const { current } = useSelector(state => state.user)
+  const { current, currentCart } = useSelector(state => state.user)
   const handleClickOptions = async (e, flag) => {
     e.stopPropagation();
     if (flag === 'CART') {
@@ -61,16 +71,40 @@ const Product = ({ productData, isNew, normal, navigate, dispatch, location }) =
     }
 
     if (flag === 'WISHLIST') {
-      console.log('WISHLIST');
+      if (!current) {
+        return Swal.fire({
+          title: 'Almost...',
+          text: 'Please login first',
+          icon: 'info',
+          showCancelButton: true,
+          cancelButtonText: 'Not now!',
+          confirmButtonText: 'Go login'
+        }).then((rs) => {
+          if (rs.isConfirmed) {
+            navigate({
+              pathname: `/${path.LOGIN}`,
+              search: createSearchParams({ redirect: location.pathname }).toString(),
+            })
+          }
+        })
+      }
+      const response = await apiUpdateWishlist(pid);
+      if (response.success) {
+        toast.success(response.mes);
+        dispatch(getCurrent());
+      } else {
+        toast.error(response.mes)
+      }
+
     }
     if (flag === 'QUICK_VIEW') {
       dispatch(showModal({ isShowModal: true, modalChildren: <DetailProduct data={{ pid: productData?._id, category: productData?.category }} isQuickView /> }))
     }
   }
   return (
-    <div className='w-full text-base px-[10px]'>
+    <div className={clsx('w-full text-base px-[10px]', className)}>
       <div className='w-full border p-[15px] flex flex-col items-center cursor-pointer'
-        onClick={() => navigate(`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.title}`)}
+        onClick={(e) => navigate(`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.title}`)}
         onMouseEnter={e => {
           e.stopPropagation();
           setIsShowOption(true);
@@ -83,7 +117,7 @@ const Product = ({ productData, isNew, normal, navigate, dispatch, location }) =
         <div className='w-full relative'>
           {isShowOption && <div className='absolute bottom-[-10px] left-0 right-0 flex justify-center gap-3 animate-slide-top'>
             <span title='Quich view' onClick={(e) => handleClickOptions(e, 'QUICK_VIEW')}><SelectOption icon={<AiFillEye />} /></span>
-            {current?.cart?.some(el => el.product?._id === productData._id.toString())
+            {currentCart?.some(el => el.product?._id === productData._id.toString())
               ? <span title='Added to cart'>
                 <SelectOption icon={<BsCartCheckFill color='green' />} />
               </span>
@@ -91,7 +125,8 @@ const Product = ({ productData, isNew, normal, navigate, dispatch, location }) =
                 <SelectOption icon={<BsFillCartPlusFill />} />
               </span>
             }
-            <span title='Add to wishlist' onClick={(e) => handleClickOptions(e, 'WISHLIST')}><SelectOption icon={<FaHeart />} /></span>
+            {}
+            <span title='Add to wishlist' onClick={(e) => handleClickOptions(e, 'WISHLIST')}><SelectOption icon={<FaHeart color={current?.wishlist?.some(i => i._id === pid) ? 'red' : 'black'} />} /></span>
           </div>}
           <img src={productData?.thumb || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'}
             alt='' className='w-[274px] h-[274px] object-cover'

@@ -1,6 +1,9 @@
+import { apiRemoveCart } from 'apis';
 import { SelectQuantity } from 'components';
 import withBaseComponent from 'hocs/withBaseComponent';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { getCurrent } from 'store/user/asyncActions';
 import { updateCart } from 'store/user/userSlice';
 import { formatPriceVN } from 'utils/helper';
 
@@ -13,6 +16,15 @@ const OrderItem = ({ dispatch, color, defaultQuantity, price, pid, thumbnail, ti
         }
     }
 
+    const removeFromCart = async (pid, color) => {
+        const response = await apiRemoveCart(pid, color);
+        if (response.success) {
+            toast.success(response.mes);
+            dispatch(getCurrent())
+        } else {
+            toast.error(response.mes)
+        }
+    }
     const handleChangeQuantity = (flag) => {
         if (flag === 'minus' && quantity === 1) return;
         if (flag === 'minus') setQuantity(prev => +prev - 1);
@@ -31,6 +43,7 @@ const OrderItem = ({ dispatch, color, defaultQuantity, price, pid, thumbnail, ti
                     <div className='flex flex-col gap-1 items-start'>
                         <span className='font-semibold text-sm'>{title}</span>
                         <span className='text-xs'>{color}</span>
+                        <span className='text-xs cursor-pointer hover:text-main font-normal py-2' onClick={() => removeFromCart(pid, color)}>Remove</span>
                     </div>
                 </div>
             </span>

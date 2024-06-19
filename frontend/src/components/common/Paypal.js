@@ -37,12 +37,10 @@ const ButtonWrapper = ({
             setIsSuccess(true);
             setTimeout(() => {
                 Swal.fire("Congratulation!", "Order successful.", "success").then(() => {
-                    // navigate(`/${path.MEMBER}/${path.HISTORY}`);
-                    navigate('/')
+                    navigate(`/${path.MEMBER}/${path.HISTORY}`);
                 });
             }, 1500);
         }
-        console.log(response);
     };
     return (
         <>
@@ -57,13 +55,12 @@ const ButtonWrapper = ({
                         { amount: { currency_code: currency, value: amount } },
                     ],
                 }).then((orderId) => orderId)}
-                onApprove={(data, actions) => actions.order.capture().then(async (response) => {
-                    // console.log(response);
-                    // console.log(payload);
-                    if (response.status === "COMPLETED") {
-                        handleSaveOrder();
-                    }
-                })
+                onApprove={(data, actions) =>
+                    actions.order.capture().then(async (response) => {
+                        if (response.status === "COMPLETED") {
+                            handleSaveOrder();
+                        }
+                    })
                 }
             />
         </>
@@ -86,3 +83,6 @@ export default function PayPal({ amount, payload, setIsSuccess }) {
         </div>
     );
 }
+
+// sb-6cd43o31181434@personal.example.com
+// Nn?4iB1G

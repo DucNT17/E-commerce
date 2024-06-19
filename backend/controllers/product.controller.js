@@ -65,6 +65,7 @@ const getProducts = asyncHandler(async (req, res) => {
     }
     if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' };
     if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' };
+    if (queries?.brand) formatedQueries.brand = { $regex: queries.brand, $options: 'i' };
 
     let queryObject = {}
     if (queries?.q) {

@@ -1,10 +1,12 @@
+import withBaseComponent from 'hocs/withBaseComponent'
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
+import { createSearchParams } from 'react-router-dom'
 import icons from 'utils/icons'
 
 const { IoIosArrowForward } = icons
 
-const HotCollections = () => {
+const HotCollections = ({ navigate }) => {
     const { categories } = useSelector(state => state.appReducer)
     return (
         <div className='w-full'>
@@ -18,7 +20,12 @@ const HotCollections = () => {
                                 <h4 className='font-semibold uppercase'>{el.title}</h4>
                                 <ul className='text-sm'>
                                     {el?.brand?.map((item) => (
-                                        <span key={item} className='flex gap-2 items-center text-gray-500'>
+                                        <span
+                                            onClick={() => navigate({
+                                                pathname: `/${el.title}`,
+                                                search: createSearchParams({ brand: item }).toString()
+                                            })}
+                                            key={item} className='flex cursor-pointer hover:text-main gap-2 items-center text-gray-500'>
                                             <IoIosArrowForward size={14} />
                                             <li>
                                                 {item}
@@ -35,4 +42,4 @@ const HotCollections = () => {
     )
 }
 
-export default memo(HotCollections)
+export default withBaseComponent(memo(HotCollections))

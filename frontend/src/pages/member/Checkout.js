@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import payment from 'assets/payment.svg';
 import { formatPriceVN } from 'utils/helper';
 import withBaseComponent from 'hocs/withBaseComponent';
-import { Congrat, InputForm, PayPal } from "components";
+import { Congrat, PayPal } from "components";
 // import { useForm } from 'react-hook-form';
 import { getCurrent } from 'store/user/asyncActions';
 
@@ -28,13 +28,15 @@ const Checkout = ({ dispatch, navigate }) => {
     //     setValue('address', current?.address);
     // }, [current])
 
+    const totalBeforeDiscount = currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0);
+
     useEffect(() => {
         if (isSuccess) {
             dispatch(getCurrent());
 
         }
-    }, [isSuccess])
-
+    }, [isSuccess, dispatch])
+    console.log(+currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0));
     return (
         <div className="p-8 w-full grid grid-cols-10 h-full max-h-screen overflow-y-auto gap-6">
             {isSuccess && <Congrat />}
@@ -86,17 +88,6 @@ const Checkout = ({ dispatch, navigate }) => {
                                 <span className="font-medium">Address:</span>
                                 <span className="text-main font-bold">{current?.address}</span>
                             </span>
-                            {/* <InputForm
-                                label="Your Address"
-                                register={register}
-                                errors={errors}
-                                id="address"
-                                validate={{
-                                    required: "Need fill this field",
-                                }}
-                                placeholder="Please fill your address"
-                                style='text-sm'
-                            /> */}
                         </div>
                         {/* <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-4">
@@ -131,10 +122,10 @@ const Checkout = ({ dispatch, navigate }) => {
                                     products: currentCart,
                                     // coupons: selectedCoupon,
                                     address: current?.address,
-                                    total: Math.round(+currentCart?.reduce((sum, el) => sum + +el?.price * el?.quantity, 0) / 23500),
+                                    total: Math.round(+currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0) / 23500)
                                 }}
                                 setIsSuccess={setIsSuccess}
-                                amount={Math.round(+currentCart?.reduce((sum, el) => sum + +el?.price * el?.quantity, 0) / 23500)}
+                                amount={Math.round(+currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0) / 23500)}
                             />
                         </div>
 

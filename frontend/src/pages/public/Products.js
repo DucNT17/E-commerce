@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom'
 import {
   Breadcrumb,
@@ -10,10 +10,11 @@ import {
 import { apiGetProducts } from '../../apis';
 import Masonry from 'react-masonry-css'
 import { sorts } from '../../utils/contants';
+import withBaseComponent from 'hocs/withBaseComponent';
 
 
-const Products = () => {
-  const navigate = useNavigate();
+const Products = ({ navigate }) => {
+  const titleRef = useRef()
   const { category } = useParams();
   const [products, setProducts] = useState(null);
   const [activeClick, setActiveClick] = useState(null);
@@ -56,6 +57,7 @@ const Products = () => {
     const q = { ...priceQuery, ...queries }
     window.scrollTo(0, 0);
     fetchProductsByCategory(q);
+    titleRef.current.scrollIntoView({ block: 'center' });
   }, [params]);
 
   const changeActiveFilter = useCallback((name) => {
@@ -83,7 +85,7 @@ const Products = () => {
 
 
   return (
-    <div className='w-full'>
+    <div ref={titleRef} className='w-full'>
       {/* Breadcrumb */}
       <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
         <div className='w-main'>
@@ -135,4 +137,4 @@ const Products = () => {
   )
 }
 
-export default Products
+export default withBaseComponent(Products)

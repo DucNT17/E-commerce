@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react'
 import icons from 'utils/icons'
 import { apiGetProducts } from 'apis/product'
-import { renderStarFromNumber, formatMoney } from 'utils/helper'
+import { renderStarFromNumber, formatMoney, formatPriceVN } from 'utils/helper'
 import { CountDown } from 'components'
 import { secondToHms } from 'utils/helper'
 import moment from 'moment'
@@ -15,11 +15,10 @@ const DealDaily = () => {
   const [second, setSecond] = useState(0);
   const [expireTime, setExpireTime] = useState(false);
 
-
   const fetchDealDaily = async () => {
-    const response = await apiGetProducts({ limit: 1, page: Math.round(Math.random() * 10), totalRatings: 5 })
+    const response = await apiGetProducts({ sort: '+totalRatings', limit: 20 })
     if (response.success) {
-      setDealDaily(response.products[0]);
+      setDealDaily(response.products[Math.round(Math.random() * 20)]);
 
       const today = `${moment().format('MM/DD/YYYY')} 7:00:00`
       const seconds = new Date(today).getTime() - new Date().getTime() + 24 * 3600 * 1000;
@@ -36,7 +35,7 @@ const DealDaily = () => {
   // }, [])
 
   useEffect(() => {
-    clearInterval(idInterval);
+    idInterval && clearInterval(idInterval);
     fetchDealDaily();
   }, [expireTime])
 
@@ -64,7 +63,7 @@ const DealDaily = () => {
       clearInterval(idInterval);
     }
   }, [hour, minute, second, expireTime]);
-
+  // console.log(dealDaily);
 
   return (
     <div className='border w-full flex-auto'>
@@ -84,7 +83,7 @@ const DealDaily = () => {
           <span key={index}>{el}</span>
         ))}</span>
         <span>
-          {`${formatMoney(dealDaily?.price)} VND`}
+          {`${formatPriceVN(dealDaily?.price)}`}
         </span>
       </div>
       <div className='mt-8 px-4'>

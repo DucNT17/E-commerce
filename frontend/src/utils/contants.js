@@ -280,7 +280,7 @@ export const adminSidebar = [
     },
 ];
 
-const {FaUserEdit, FaShoppingCart, FaHistory, FaHeartCirclePlus} = icons
+const { FaUserEdit, FaShoppingCart, FaHistory, FaHeartCirclePlus } = icons
 
 export const memberSidebar = [
     {
@@ -338,23 +338,27 @@ export const blockStatus = [
 export const statusOrdersUser = [
     {
         value: "0",
-        label: "Đã Hủy",
+        label: "Cancel",
     },
     {
         value: "1",
-        label: "Đang xử lý",
+        label: "Processing",
     },
     {
         value: "2",
-        label: "Đang giao",
+        label: "Delivering",
     },
     {
         value: "3",
-        label: "Hoàn thành",
+        label: "Succeed",
+    },
+    {
+        value: "4",
+        label: "Confirmed",
     },
 ];
 
-export const statusTexts = ["Đã hủy", "Đang xử lý", "Đang giao", "Hoàn thành", "Đã xác nhận"];
+export const statusTexts = ["Cancel", "Processing", "Delivering", "Succeed", "Confirmed"];
 
 export const statusColor = [
     "bg-red-600",

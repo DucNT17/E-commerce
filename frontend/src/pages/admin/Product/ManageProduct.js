@@ -20,11 +20,10 @@ import moment from 'moment'
 import { formatPriceVN, formatPriceUSD } from 'utils/helper'
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
+import withBaseComponent from 'hocs/withBaseComponent';
 
-const ManageProduct = () => {
+const ManageProduct = ({ navigate, location }) => {
     const [params] = useSearchParams();
-    const navigate = useNavigate();
-    const location = useLocation();
     const {
         register,
         formState: { errors },
@@ -196,4 +195,4 @@ const ManageProduct = () => {
     )
 }
 
-export default ManageProduct
+export default withBaseComponent(ManageProduct)

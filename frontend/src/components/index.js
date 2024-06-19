@@ -42,3 +42,4 @@ export { default as Cart } from './products/Cart';
 export { default as OrderItem } from './products/OrderItem';
 export { default as PayPal } from './common/Paypal';
 export { default as Congrat } from './common/Congrat';
+export { default as CustomSelect } from './inputs/CustomSelect';
