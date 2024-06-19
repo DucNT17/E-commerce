@@ -19,12 +19,12 @@ export const apiGetUserOrders = (params) => axios({
 });
 
 export const apiUpdateStatus = (oid, data) => axios({
-    url: "/order/admin/status/" + oid,
+    url: "/order/status/" + oid,
     method: "PUT",
     data,
 });
 
 export const apiCancelOrder = (oid) => axios({
-    url: "/order/user/cancel/" + oid,
+    url: "/order/cancel/" + oid,
     method: "PUT",
 });

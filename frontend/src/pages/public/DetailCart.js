@@ -33,7 +33,7 @@ const DetailCart = ({ location, navigate }) => {
     }
     return (
         <div className='w-full'>
-            <div className='h-[81px] bg-gray-100 flex justify-center     items-center'>
+            <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
                 <div className='w-main'>
                     <h3 className='font-semibold uppercase'>Detail Cart</h3>
                     <Breadcrumb category={location?.pathname?.replace('/', '')?.split('-')?.join(' ')} />

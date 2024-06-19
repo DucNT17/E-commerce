@@ -1,6 +1,7 @@
 const Order = require('../models/order.model')
 const User = require('../models/user.model')
 const Coupon = require('../models/coupon.model')
+const Product = require('../models/product.model')
 const asyncHandler = require('express-async-handler');
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -13,7 +14,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
     // const data = { products, total, orderBy: _id, coupon: coupon || null };
     const data = { products, total, orderBy: _id };
-    if(status) {
+    if (status) {
         data.status = status;
     }
     // if (coupon) {
@@ -42,12 +43,83 @@ const createOrder = asyncHandler(async (req, res) => {
 const updateOrderStatus = asyncHandler(async (req, res) => {
     const { oid } = req.params;
     const { status } = req.body;
-    if (!status) throw new Error("Missing status");
-    const response = await Order.findByIdAndUpdate(oid, { status }, { new: true });
+    const order = await Order.findById(oid).populate({
+        path: "products",
+        populate: {
+            path: "product",
+        },
+    });
+    if (!status) throw new Error("Missing Input");
+    const response = await Order.findByIdAndUpdate(
+        oid,
+        { status },
+        { new: true }
+    );
+    if (response.status === 3) {
+        for (const { product: productId, quantity } of order.products) {
+            const prod = await Product.findById(productId);
+            if (prod) {
+                await Product.findByIdAndUpdate(productId, {
+                    $inc: { sold: quantity, quantity: -quantity },
+                },
+                    { new: true }
+                );
+            }
+        }
+    }
     return res.json({
         success: response ? true : false,
-        rs: response ? response : "Some thing went wrong",
+        mes: response ? 'Updated successfull' : "Some thing went wrong",
     })
+});
+
+const cancelOrder = asyncHandler(async (req, res) => {
+    const { oid } = req.params;
+    const { _id } = req.user;
+
+    const order = await Order.findById(oid);
+
+    if (!order) {
+        return res.status(404).json({
+            success: false,
+            mes: "Order not found",
+        });
+    }
+
+    if (order.status === 0) {
+        return res.status(200).json({
+            success: false,
+            mes: "Your order has been cancelled",
+        });
+    }
+
+    if (order.status === 2 || order.status === 3 || order.status === 4) {
+        return res.status(200).json({
+            success: false,
+            mes: "Orders cannot be canceled once the order has been confirmed",
+        });
+    }
+
+    const createdAtTime = new Date(order.createdAt).getTime();
+    const currentTime = new Date().getTime();
+    const timeDiff = currentTime - createdAtTime;
+    const cancelTimeLimit = 30 * 60 * 1000;
+
+    if (timeDiff > cancelTimeLimit) {
+        return res.status(200).json({
+            success: false,
+            mes: "Orders cannot be canceled after 30 minutes from the time the order was created",
+        });
+    }
+
+    order.status = 0;
+    await order.save();
+
+    return res.status(200).json({
+        success: true,
+        mes: "Đã hủy đơn hàng thành công",
+        order: order,
+    });
 });
 
 const getUserOrder = asyncHandler(async (req, res) => {
@@ -105,13 +177,25 @@ const getOrders = asyncHandler(async (req, res) => {
     excludeFields.forEach((el) => delete queries[el]);
     // Format lại các operators cho đúng cú pháp mongoose
     let queryString = JSON.stringify(queries);
-    queryString = queryString.replace(
-        /\b(gte|gt|lt|lte)\b/g,
-        (macthedEl) => `$${macthedEl}`
-    );
+    queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, (matchEl) => `$${matchEl}`);
     const formatedQueries = JSON.parse(queryString);
-    const qr = { ...formatedQueries };
-    let queryCommand = Order.find(qr).populate("orderBy").populate('coupons');
+
+    let queryObject = {}
+    if (queries?.q) {
+        delete formatedQueries.q;
+        queryObject = {
+            $or: [
+                { firstname: { $regex: queries.q, $options: "i" } },
+                { lastname: { $regex: queries.q, $options: 'i' } },
+                { status: { $regex: queries.q, $options: 'i' } },
+                { total: { $regex: queries.q, $options: 'i' } }
+            ]
+        }
+    }
+    const qr = { ...formatedQueries, ...queryObject };
+    // let queryCommand = Order.find(qr).populate("orderBy").populate('coupons');
+    let queryCommand = Order.find(qr).populate("orderBy")
+
 
     // Sorting
     if (req.query.sort) {
@@ -131,23 +215,22 @@ const getOrders = asyncHandler(async (req, res) => {
     queryCommand.skip(skip).limit(limit);
     // Execute query
     // Số lượng sp thỏa mãn điều kiện !== số lượng sp trả về 1 lần gọi API
-    queryCommand
-        .then(async (response) => {
-            const counts = await Order.find(qr).countDocuments();
-            return res.status(200).json({
-                success: response ? true : false,
-                counts,
-                orderList: response ? response : "Lỗi hệ thống",
-            });
-        })
-        .catch((err) => {
-            throw new Error(err.message);
+    queryCommand.then(async (response) => {
+        const counts = await Order.find(qr).countDocuments();
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            orderList: response ? response : "Lỗi hệ thống",
         });
+    }).catch((err) => {
+        throw new Error(err.message);
+    });
 });
 
 module.exports = {
     createOrder,
     updateOrderStatus,
     getUserOrder,
-    getOrders
+    getOrders,
+    cancelOrder
 }

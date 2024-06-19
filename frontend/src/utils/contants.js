@@ -28,7 +28,12 @@ export const navigation = [
         id: 5,
         value: "FAQs",
         path: `/${path.FAQ}`
-    }
+    },
+    {
+        id: 6,
+        value: "CONTACT US",
+        path: `/${path.CONTACT_US}`
+    },
 ]
 
 const { FaShieldAlt, FaTruck, FaGift, FaReply, FaTty } = icons

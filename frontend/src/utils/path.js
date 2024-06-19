@@ -7,11 +7,13 @@ const path = {
     BLOGS: 'blogs',
     OUR_SERVICES: 'services',
     FAQ: 'faqs',
+    CONTACT_US: 'contact-us',
     DETAIL_PRODUCT__CATEGORY__PID__TITLE: ':category/:pid/:title',
     FINAL_REGISTER: 'finalregister/:status',
     RESET_PASSWORD: 'reset-password/:token',
     DETAL_CART: 'detail-cart',
     PRODUCTS: 'products',
+
 
     // Admin
     ADMIN: 'admin',

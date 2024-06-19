@@ -8,6 +8,6 @@ routes.post('/', [verifyAccessToken], order.createOrder)
 routes.get('/', [verifyAccessToken], order.getUserOrder)
 routes.get('/admin', [verifyAccessToken, isAdmin], order.getOrders)
 routes.put('/status/:oid', [verifyAccessToken, isAdmin], order.updateOrderStatus)
-
+routes.put('/cancel/:oid', [verifyAccessToken], order.cancelOrder)
 
 module.exports = routes;

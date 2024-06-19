@@ -10,7 +10,8 @@ import {
   Services,
   FinalRegister,
   ResetPassword,
-  DetailCart
+  DetailCart,
+  ContactUs
 } from './pages/public';
 import {
   AdminLayout,
@@ -40,6 +41,7 @@ import Products from './pages/public/Products';
 import { Cart, Modal } from './components';
 import { showCart } from 'store/app/appSlice';
 
+
 function App() {
   const dispatch = useDispatch();
   const { isShowModal, modalChildren, isShowCart } = useSelector(state => state.appReducer);
@@ -65,6 +67,7 @@ function App() {
           <Route path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLE} element={<DetailProduct />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.OUR_SERVICES} element={<Services />} />
+          <Route path={path.CONTACT_US} element={<ContactUs />} />
           <Route path={path.PRODUCTS__CATEGORY} element={<Products />} />
           <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={path.DETAL_CART} element={<DetailCart />} />

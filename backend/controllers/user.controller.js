@@ -241,7 +241,7 @@ const getUsers = asyncHandler(async (req, res) => {
     queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, (matchEl) => `$${matchEl}`);
     const formatedQueries = JSON.parse(queryString);
 
-    if (queries?.name) formatedQueries.name = { $regex: queries.name, $options: 'i' };
+    // if (queries?.name) formatedQueries.name = { $regex: queries.name, $options: 'i' };
 
     if (req.query.q) {
         delete formatedQueries.q;

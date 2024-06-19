@@ -37,9 +37,6 @@ const Home = () => {
       <div className='my-4 w-main'>
         <BlogPosts />
       </div>
-      <div className='w-main h-[500px]'>
-
-      </div>
     </>
 
   )
