@@ -23,7 +23,7 @@ const Pagination = ({ totalCount }) => {
                 )} - ${Math.min(
                     +process.env.REACT_APP_LIMIT,
                     totalCount
-                )} of ${totalCount}`}</span>
+                )} from ${totalCount}`}</span>
             ) : (
                 ""
             )}

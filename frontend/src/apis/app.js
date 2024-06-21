@@ -6,6 +6,28 @@ export const apiGetCategories = () => axios({
     method: 'GET',
 })
 
+export const apiGetCategory = (params) => axios({
+    url: '/productCategory/admin',
+    method: 'GET',
+    params
+})
+
+export const apiDeleteCategory = (id) => axios({
+    url: `/productCategory/${id}`,
+    method: "DELETE",
+});
+
+export const apiCreateCategory = (data) => axios({
+    url: "/productCategory",
+    method: "POST",
+    data,
+});
+
+export const apiUpdateCategory = (id, data) => axios({
+    url: `/productCategory/${id}`,
+    method: "PUT",
+    data,
+});
 
 // coupon
 export const apiCreateCoupon = (data) => axios({

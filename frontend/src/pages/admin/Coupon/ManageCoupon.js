@@ -77,7 +77,6 @@ const ManageCoupon = ({ navigate, location }) => {
         });
     };
 
-    console.log(coupons);
     return (
         <div className="w-full flex flex-col gap-4 relative">
             {editCoupon && (

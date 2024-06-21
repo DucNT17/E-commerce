@@ -25,7 +25,6 @@ const History = ({ navigate, location, dispatch }) => {
         watch,
     } = useForm();
     const status = watch("status");
-    console.log(status);
     const fetchPOrders = async (params) => {
         const response = await apiGetUserOrders({
             ...params,
