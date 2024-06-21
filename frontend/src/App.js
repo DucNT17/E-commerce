@@ -19,7 +19,11 @@ import {
   ManageUser,
   CreateProduct,
   ManageOrder,
-  Dashboard
+  Dashboard,
+  ManageCoupon,
+  CreateCoupon,
+  ManageCategory,
+  CreateCategory
 
 } from './pages/admin'
 
@@ -80,6 +84,10 @@ function App() {
           <Route path={path.MANAGE_ORDER} element={<ManageOrder />} />
           <Route path={path.CREATE_PRODUCTS} element={<CreateProduct />} />
           <Route path={path.MANAGE_USER} element={<ManageUser />} />
+          <Route path={path.MANAGE_COUPON} element={<ManageCoupon />} />
+          <Route path={path.CREATE_COUPON} element={<CreateCoupon />} />
+          <Route path={path.MANAGE_CATEGORY} element={<ManageCategory />} />
+          <Route path={path.CREATE_CATEGORY} element={<CreateCategory />} />
 
         </Route>
 

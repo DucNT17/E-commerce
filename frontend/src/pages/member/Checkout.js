@@ -4,8 +4,11 @@ import payment from 'assets/payment.svg';
 import { formatPriceVN } from 'utils/helper';
 import withBaseComponent from 'hocs/withBaseComponent';
 import { Congrat, PayPal } from "components";
-// import { useForm } from 'react-hook-form';
 import { getCurrent } from 'store/user/asyncActions';
+import { apiCreateOrder, apiGetCoupons } from 'apis';
+import Swal from 'sweetalert2';
+import path from 'utils/path';
+import { toast } from 'react-toastify';
 
 const Checkout = ({ dispatch, navigate }) => {
     const { currentCart, current } = useSelector(state => state.user)
@@ -15,28 +18,94 @@ const Checkout = ({ dispatch, navigate }) => {
     const [coupons, setCoupons] = useState([]);
     const [selectedCoupon, setSelectedCoupon] = useState("");
 
-    // const {
-    //     register,
-    //     formState: { errors },
-    //     watch,
-    //     setValue
-    // } = useForm();
+    useEffect(() => {
+        const fetchCoupons = async (params) => {
+            const response = await apiGetCoupons({
+                ...params,
+                limit: process.env.REACT_APP_LIMIT,
+                status: 1,
+            });
+            if (response.success) {
+                setCoupons(response.coupons);
+            }
+        };
+        fetchCoupons();
+    }, []);
 
-    // const address = watch('address');
+    useEffect(() => {
+        if (currentCart.length <= 0 && !checkoutCompleted) {
+            Swal.fire({
+                icon: "warning",
+                title: "Giỏ hàng trống",
+                text: "Vui lòng chọn mặt hàng trước khi thanh toán",
+            }).then(() => {
+                navigate("/");
+            });
+        }
+    }, [currentCart, checkoutCompleted]);
 
-    // useEffect(() => {
-    //     setValue('address', current?.address);
-    // }, [current])
+    const totalBeforeDiscount = currentCart.reduce(
+        (sum, el) => +el?.price * el.quantity + sum,
+        0
+    );
 
-    const totalBeforeDiscount = currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0);
+    const selectedCouponData = coupons.find(
+        (coupon) => coupon._id === selectedCoupon
+    );
+
+    const discountPercentage = selectedCouponData
+        ? selectedCouponData.discount
+        : 0;
+
+    const discountValue = totalBeforeDiscount * (discountPercentage / 100);
+    const totalAfterDiscount = totalBeforeDiscount - discountValue;
 
     useEffect(() => {
         if (isSuccess) {
             dispatch(getCurrent());
-
+            setCheckoutCompleted(true);
         }
-    }, [isSuccess, dispatch])
-    console.log(+currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0));
+    }, [isSuccess])
+
+    useEffect(() => {
+        if (paymentMethod === "OFFLINE") {
+            const total = totalAfterDiscount;
+            Swal.fire({
+                icon: "info",
+                title: "Order",
+                text: `Please pay in cash the amount ${formatPriceVN(total)} upon receipt`,
+                showConfirmButton: true,
+                confirmButtonText: "Confrim",
+                showCancelButton: true,
+                cancelButtonText: "Go back",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    handleSaveOrder();
+                } else {
+                    setPaymentMethod("");
+                }
+            });
+        }
+    }, [paymentMethod]);
+
+    const handleSaveOrder = async () => {
+        const payload = {
+            products: currentCart,
+            address: current?.address,
+            coupon: selectedCoupon,
+            total: totalAfterDiscount / 23500,
+        };
+        const response = await apiCreateOrder({ ...payload, status: 1 });
+        if (response.success) {
+            setIsSuccess(true);
+            setTimeout(() => {
+                Swal.fire("Congratulations", "Order successful.", "success").then(() => {
+                    navigate(`/${path.MEMBER}/${path.HISTORY}`);
+                });
+            }, 1500);
+        } else toast.error(response.mes);
+    };
+
     return (
         <div className="p-8 w-full grid grid-cols-10 h-full max-h-screen overflow-y-auto gap-6">
             {isSuccess && <Congrat />}
@@ -81,7 +150,7 @@ const Checkout = ({ dispatch, navigate }) => {
                             <span className="flex items-center gap-8 text-sm">
                                 <span className="font-medium">Total:</span>
                                 <span className="text-main font-bold">
-                                    {formatPriceVN(currentCart?.reduce((sum, el) => sum + +el?.price * el?.quantity, 0))}
+                                    {formatPriceVN(totalAfterDiscount)}
                                 </span>
                             </span>
                             <span className="flex items-center gap-8 text-sm">
@@ -89,46 +158,45 @@ const Checkout = ({ dispatch, navigate }) => {
                                 <span className="text-main font-bold">{current?.address}</span>
                             </span>
                         </div>
-                        {/* <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-4">
-                                <span>Mã khuyến mãi: </span>
+                                <span>Coupon: </span>
                                 <select
                                     onChange={(e) => setSelectedCoupon(e.target.value)}
                                     value={selectedCoupon}
-                                    className="border rounded-md px-4 py-3 w-[30%]">
-                                    <option value="">Chọn</option>
+                                    className="border rounded-md px-4 py-3 w-[31%]">
+                                    <option value="">Select Coupon</option>
                                     {coupons?.map((value) => (
                                         <option key={value._id} value={value._id}>
-                                            {value.name} (giảm {value.discount}%)
+                                            {value.name} (discount {value.discount}%)
                                         </option>
                                     ))}
                                 </select>
                             </div>
                             <div className="flex items-center gap-4">
-                                <span>Phương thức thanh toán: </span>
+                                <span>Payment Method: </span>
                                 <select
                                     onChange={(e) => setPaymentMethod(e.target.value)}
                                     value={paymentMethod}
                                     className="border rounded-md px-4 py-3 w-[30%]">
-                                    <option value="">Chọn</option>
-                                    <option value="OFFLINE">Thanh toán khi nhận hàng</option>
-                                    <option value="ONLINE">Thanh toán Paypal</option>
+                                    <option value="">Select payment</option>
+                                    <option value="OFFLINE">Cash on Delivery</option>
+                                    <option value="ONLINE">Paypal payment</option>
                                 </select>
                             </div>
-                        </div> */}
-                        <div className="w-full mx-auto">
+                        </div>
+                        {paymentMethod === "ONLINE" && <div className="w-full mx-auto">
                             <PayPal
                                 payload={{
                                     products: currentCart,
-                                    // coupons: selectedCoupon,
+                                    coupon: selectedCoupon,
                                     address: current?.address,
-                                    total: Math.round(+currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0) / 23500)
+                                    total: totalAfterDiscount / 23500
                                 }}
                                 setIsSuccess={setIsSuccess}
-                                amount={Math.round(+currentCart.reduce((sum, el) => +el?.price * el.quantity + sum, 0) / 23500)}
+                                amount={Math.round(totalAfterDiscount / 23500)}
                             />
-                        </div>
-
+                        </div>}
                     </div>
                 </div>
 

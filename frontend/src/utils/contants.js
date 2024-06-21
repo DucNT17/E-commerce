@@ -347,7 +347,7 @@ export const statusOrdersUser = [
     },
     {
         value: "1",
-        label: "Processing",
+        label: "Cash on Delivery",
     },
     {
         value: "2",
@@ -359,17 +359,18 @@ export const statusOrdersUser = [
     },
     {
         value: "4",
-        label: "Confirmed",
+        label: "Purchased",
     },
 ];
 
-export const statusTexts = ["Cancel", "Processing", "Delivering", "Succeed", "Confirmed"];
+export const statusTexts = ["Cancel", "Cash on Delivery", "Delivering", "Succeed", "Purchased"];
 
 export const statusColor = [
     "bg-red-600",
     "bg-gray-500",
     "bg-yellow-400",
     "bg-green-400",
+    "bg-sky-400",
 ];
 
 export const getStatusClass = (status) => {

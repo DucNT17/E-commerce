@@ -48,11 +48,11 @@ const OrderDetail = ({ data }) => {
                     ))}
                 </tbody>
             </table>
-            {data?.coupons && (
+            {data?.coupon && (
                 <div class="text-right mb-8">
-                    <div class="text-gray-700 mr-2">Khuyến mãi:</div>
+                    <div class="text-gray-700 mr-2">Promotion:</div>
                     <div class="text-gray-700">
-                        {data?.coupons?.name} (-{data?.coupons?.discount}%)
+                        {data?.coupon?.name} (-{data?.coupon?.discount}%)
                     </div>
                 </div>
             )}

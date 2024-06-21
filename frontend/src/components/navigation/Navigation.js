@@ -9,7 +9,7 @@ const Navigation = () => {
         <NavLink
           to={el.path}
           key={el.id}
-          className={({ isActive }) => isActive ? 'pr-12 hover:text-main text-main' : 'pr-12 hover:text-main'}
+          className={({ isActive }) => isActive ? 'pr-8 hover:text-main text-main' : 'pr-8 hover:text-main'}
         >
           {el.value}
         </NavLink>

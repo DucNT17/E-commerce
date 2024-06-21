@@ -16,17 +16,17 @@ var orderSchema = new mongoose.Schema(
                 title: String,
             },
         ],
-        // coupon: {
-        //     type: mongoose.Types.ObjectId,
-        //     ref: "Coupon",
-        // },
+        coupon: {
+            type: mongoose.Types.ObjectId,
+            ref: "Coupon",
+        },
         status: {
             type: Number,
             default: 1,
-            enum: [0, 1, 2, 3, 4], //["cancelled", "processing", "delivering", "success", "confirmed"],
+            enum: [0, 1, 2, 3, 4], //["cancelled", "cash on delivery", "delivering", "success", "purchased"],
         },
         orderBy: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Types.ObjectId,
             ref: "User",
         },
         total: Number,

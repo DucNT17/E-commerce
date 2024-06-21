@@ -32,7 +32,7 @@ const ButtonWrapper = ({
     }, [currency, showSpinner]);
 
     const handleSaveOrder = async () => {
-        const response = await apiCreateOrder({ ...payload, status: 1 });
+        const response = await apiCreateOrder({ ...payload, status: 4 });
         if (response.success) {
             setIsSuccess(true);
             setTimeout(() => {

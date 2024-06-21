@@ -6,32 +6,34 @@ const asyncHandler = require('express-async-handler');
 
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    const { products, total, address, status } = req.body;
+    const { products, total, address, status, coupon } = req.body;
 
     if (address) {
         await User.findByIdAndUpdate(_id, { address, cart: [] });
     }
 
-    // const data = { products, total, orderBy: _id, coupon: coupon || null };
-    const data = { products, total, orderBy: _id };
+    const data = { products, total, orderBy: _id, coupon: coupon || null };
+    // const data = { products, total, orderBy: _id };
     if (status) {
         data.status = status;
     }
-    // if (coupon) {
-    //     const selectedCoupon = await Coupon.findById(coupon);
-    //     if (selectedCoupon.quantity <= 0) {
-    //         return res.status(200).json({
-    //             success: false,
-    //             mes: "Coupon invalid",
-    //         });
-    //     }
-    //     data.coupon = coupon;
-    //     await Coupon.findByIdAndUpdate(coupon, {
-    //         $inc: { quantity: -1, usageCount: 1 },
-    //     });
-    // }
+    if (coupon) {
+        const selectedCoupon = await Coupon.findById(coupon);
+        if (selectedCoupon.quantity <= 0) {
+            return res.status(200).json({
+                success: false,
+                mes: "Coupon invalid",
+            });
+        }
+        data.coupon = coupon;
+        await Coupon.findByIdAndUpdate(coupon, {
+            $inc: { quantity: -1, usageCount: 1 },
+        });
+    }
 
-    // if (status) data.status = status;
+    if (status) {
+        data.status = status
+    };
     const response = await Order.create(data);
 
     return res.json({
@@ -70,6 +72,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     return res.json({
         success: response ? true : false,
         mes: response ? 'Updated successfull' : "Some thing went wrong",
+        order: response ? response : "Sự cố hệ thống! Vui lòng thử lại",
     })
 });
 
@@ -117,7 +120,7 @@ const cancelOrder = asyncHandler(async (req, res) => {
 
     return res.status(200).json({
         success: true,
-        mes: "Đã hủy đơn hàng thành công",
+        mes: "Order canceled successfully",
         order: order,
     });
 });
@@ -137,8 +140,8 @@ const getUserOrder = asyncHandler(async (req, res) => {
     );
     const formatedQueries = JSON.parse(queryString);
     const qr = { ...formatedQueries, orderBy: _id };
-    // let queryCommand = Order.find(qr).populate('orderBy').populate('coupons');
-    let queryCommand = Order.find(qr).populate('orderBy')
+    let queryCommand = Order.find(qr).populate('orderBy').populate('coupon');
+    // let queryCommand = Order.find(qr).populate('orderBy')
     // Sorting
     if (req.query.sort) {
         const sortBy = req.query.sort.split(",").join(" ");
@@ -162,7 +165,7 @@ const getUserOrder = asyncHandler(async (req, res) => {
             return res.status(200).json({
                 success: response ? true : false,
                 counts,
-                orderList: response ? response : "Lỗi hệ thống",
+                orderList: response ? response : "Something went wrong",
             });
         })
         .catch((err) => {
@@ -193,8 +196,8 @@ const getOrders = asyncHandler(async (req, res) => {
         }
     }
     const qr = { ...formatedQueries, ...queryObject };
-    // let queryCommand = Order.find(qr).populate("orderBy").populate('coupons');
-    let queryCommand = Order.find(qr).populate("orderBy")
+    let queryCommand = Order.find(qr).populate("orderBy").populate('coupon');
+    // let queryCommand = Order.find(qr).populate("orderBy")
 
 
     // Sorting
@@ -220,7 +223,7 @@ const getOrders = asyncHandler(async (req, res) => {
         return res.status(200).json({
             success: response ? true : false,
             counts,
-            orderList: response ? response : "Lỗi hệ thống",
+            orderList: response ? response : "Something went wrong",
         });
     }).catch((err) => {
         throw new Error(err.message);
