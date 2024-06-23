@@ -23,10 +23,10 @@ const createProduct = asyncHandler(async (req, res) => {
     if (thumb) req.body.thumb = thumb;
     if (images) req.body.images = images;
 
-    const newProduct = await Product.create(req.body);
+    const response = await Product.create(req.body);
     return res.status(200).json({
-        success: newProduct ? true : false,
-        mes: newProduct ? "Product created successfully" : 'Failed to create product'
+        success: response ? true : false,
+        mes: response ? "Product created successfully" : 'Failed to create product'
     });
 })
 

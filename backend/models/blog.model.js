@@ -7,12 +7,13 @@ var blogSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        description: {
+        slug: {
             type: String,
             required: true,
+            lowercase: true
         },
-        category: {
-            type: String,
+        description: {
+            type: Array,
             required: true,
         },
         numberViews: {
@@ -31,25 +32,17 @@ var blogSchema = new mongoose.Schema(
                 ref: "User",
             },
         ],
-
-        image: {
+        thumb: {
             type: String,
-            default: "https://t4.ftcdn.net/jpg/02/12/65/93/360_F_212659341_3teZ8qGtRuBx2zVfzOjoIrEJv4q7WuuQ.jpg",
+            required: true
         },
-
         author: {
             type: String,
             default: "Admin",
         },
     },
     {
-        toJSON: {
-            virtuals: true,
-        },
-        toObject: {
-            virtuals: true,
-        },
-        timestamps: true,
+        timestamps: true
     }
 );
 

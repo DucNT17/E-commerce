@@ -100,6 +100,7 @@ const ProductInfo = ({ totalRatings, ratings, nameProduct, pid, rerender }) => {
                 <div className='flex flex-col gap-4'>
                     {ratings?.map(el => (
                         <Comment
+                            image={el.postedBy?.avatar}
                             key={el._id}
                             star={el.star}
                             updatedAt={el.updatedAt}

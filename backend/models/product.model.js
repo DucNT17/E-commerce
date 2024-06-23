@@ -7,7 +7,7 @@ var productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    slug: { // máy tính dell --> may-tinh-dell
+    slug: {
         type: String,
         required: true,
         lowercase: true
@@ -18,7 +18,8 @@ var productSchema = new mongoose.Schema({
     },
     brand: {
         type: String,
-        required: true
+        required: true,
+        ref: 'Brand'
     },
     thumb: {
         type: String,

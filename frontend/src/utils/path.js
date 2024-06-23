@@ -34,6 +34,9 @@ const path = {
     MANAGE_BRAND: "manage-brand",
     CREATE_BRAND: "create-brand",
 
+    MANAGE_BLOG: "manage-blog",
+    CREATE_BLOG: "create-blog",
+
     // Members
     MEMBER: "member",
     PERSONAL: "personal",

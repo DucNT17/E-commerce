@@ -8,15 +8,14 @@ import {
 } from 'components'
 import { useForm } from 'react-hook-form'
 import { toast } from "react-toastify";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { validate, getBase64 } from 'utils/helper'
 import { apiCreateProduct } from 'apis';
 import { showModal } from "store/app/appSlice";
+import withBaseComponent from 'hocs/withBaseComponent';
+import path from 'utils/path';
 
-
-
-const CreateProduct = () => {
-    const dispatch = useDispatch();
+const CreateProduct = ({ dispatch, navigate }) => {
     const { categories } = useSelector((state) => state.appReducer);
     const {
         register,
@@ -100,7 +99,7 @@ const CreateProduct = () => {
                     thumb: '',
                     images: [],
                 })
-
+                navigate(`/${path.ADMIN}/${path.MANAGE_PRODUCTS}`)
             } else toast.error(response.mes);
         }
     }
@@ -269,4 +268,4 @@ const CreateProduct = () => {
     )
 }
 
-export default CreateProduct
+export default withBaseComponent(CreateProduct)

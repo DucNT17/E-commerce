@@ -1,23 +1,79 @@
 const Blog = require('../models/blog.model');
 const asyncHandler = require('express-async-handler');
+const slugify = require('slugify');
 
 const createBlog = asyncHandler(async (req, res) => {
-    const { title, description, category } = req.body;
-    if (!title || !description || !category) {
+    const { title, description } = req.body;
+    
+    const thumb = req?.files?.thumb[0]?.path;
+
+    if (!(title && description)) {
         throw new Error("Missing inputs");
     }
+
+    req.body.slug = slugify(title);
+    if (thumb) req.body.thumb = thumb;
     const response = await Blog.create(req.body);
     return res.json({
         success: response ? true : false,
-        createdBlog: response ? response : "Cannot create new blog"
+        mes: response ? "Blog create successful" : "Cannot create new blog"
     })
 })
 
 const getBlogs = asyncHandler(async (req, res) => {
-    const response = await Blog.find();
-    return res.json({
-        success: response ? true : false,
-        Blogs: response ? response : "Cannot get all blogs"
+    const queries = { ...req.query };
+    // tách các trường đặc biệt ra khỏi query
+    const excludeFields = ["limit", "sort", "page", "fields"];
+    excludeFields.forEach(el => delete queries[el]);
+    // format các operators đúng theo đúng cú pháp của mongoose
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, (matchEl) => `$${matchEl}`);
+    const formatedQueries = JSON.parse(queryString);
+
+    if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' };
+    let queryObject = {}
+    if(queries?.q) {
+        delete formatedQueries.q;
+        queryObject = {
+            $or: [
+                { title: { $regex: queries.q, $options: 'i' } },
+            ]
+        }
+    }
+    const qr = { ...formatedQueries, ...queryObject }
+
+    let queryCommand = Blog.find(qr);
+
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ');
+        queryCommand = queryCommand.sort(sortBy);
+    } else {
+        queryCommand = queryCommand.sort('-createdAt');
+    }
+
+    // Fields limiting
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    } else {
+        queryCommand = queryCommand.select('-__v')
+    }
+
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
+    const skip = (page - 1) * limit;
+    queryCommand = queryCommand.skip(skip).limit(limit);
+
+
+    queryCommand.then(async (response) => {
+        const counts = await Blog.find(qr).countDocuments();
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            blogs: response ? response : 'Cannot get blogs'
+        });
+    }).catch((err) => {
+        throw new Error(err.message);
     })
 })
 
@@ -34,25 +90,24 @@ const getBlog = asyncHandler(async (req, res) => {
 
 const updateBlog = asyncHandler(async (req, res) => {
     const { bid } = req.params;
-    if (Object.keys(bid).length === 0) {
-        throw new Error("Missing inputs");
+    const files = req?.files;
+    if (files?.thumb) req.body.thumb = files?.thumb[0]?.path;
+    if (req.body && req.body.title) {
+        req.body.slug = slugify(req.body.title);
     }
     const response = await Blog.findByIdAndUpdate(bid, req.body, { new: true });
     return res.json({
         success: response ? true : false,
-        updatedBlog: response ? response : "Cannot update blog"
+        mes: response ? "Updated Blog" : "Cannot update blog"
     })
 })
 
 const deleteBlog = asyncHandler(async (req, res) => {
     const { bid } = req.params;
-    if (Object.keys(bid).length === 0) {
-        throw new Error("Missing inputs");
-    }
     const response = await Blog.findByIdAndDelete(bid);
     return res.json({
         success: response ? true : false,
-        deletedBlog: response ? response : "Cannot delete blog"
+        mes: response ? "Deleted Blog" : "Cannot delete blog"
     })
 })
 
@@ -147,15 +202,6 @@ const dislikeBlog = asyncHandler(async (req, res) => {
     }
 });
 
-const uploadImageBlog = asyncHandler(async (req, res) => {
-    const { bid } = req.params;
-    if (!req.file) throw new Error("Missing input");
-    const response = await Blog.findByIdAndUpdate(bid, { image: req.file.path }, { new: true })
-    return res.status(200).json({
-        status: response ? true : false,
-        updatedBlog: response ? response : "Cannot upload image blog"
-    })
-});
 
 
 module.exports = {
@@ -166,5 +212,4 @@ module.exports = {
     deleteBlog,
     likeBlog,
     dislikeBlog,
-    uploadImageBlog
 }

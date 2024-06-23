@@ -59,7 +59,6 @@ export const apiGetDashboard = (params) => axios({
 });
 
 // brand
-
 export const apiCreateBrand = (data) => axios({
     url: "/brand",
     method: "POST",
@@ -77,5 +76,30 @@ export const apiUpdateBrand = (bid, data) => axios({
 });
 export const apiDeleteBrand = (bid) => axios({
     url: `/brand/${bid}`,
+    method: "DELETE",
+});
+
+// Blog
+
+export const apiCreateBlog = (data) => axios({
+    url: "/blog",
+    method: "POST",
+    data,
+});
+
+export const apiGetBlogs = (params) => axios({
+    url: "/blog",
+    method: "GET",
+    params,
+});
+
+export const apiUpdateBlog = (id, data) => axios({
+    url: `/blog/${id}`,
+    method: "PUT",
+    data,
+});
+
+export const apiDeleteBlog = (id) => axios({
+    url: `/blog/${id}`,
     method: "DELETE",
 });

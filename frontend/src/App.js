@@ -25,7 +25,9 @@ import {
   ManageCategory,
   CreateCategory,
   ManageBrand,
-  CreateBrand
+  CreateBrand,
+  CreateBlog,
+  ManageBlog
 
 } from './pages/admin'
 
@@ -92,7 +94,8 @@ function App() {
           <Route path={path.CREATE_CATEGORY} element={<CreateCategory />} />
           <Route path={path.MANAGE_BRAND} element={<ManageBrand />} />
           <Route path={path.CREATE_BRAND} element={<CreateBrand />} />
-
+          <Route path={path.CREATE_BLOG} element={<CreateBlog />} />
+          <Route path={path.MANAGE_BLOG} element={<ManageBlog />} />
         </Route>
 
         <Route path={path.MEMBER} element={<MemberLayout />}>
@@ -100,8 +103,6 @@ function App() {
           <Route path={path.MY_CART} element={<MyCart />} />
           <Route path={path.HISTORY} element={<History />} />
           <Route path={path.WISHLIST} element={<Wishlist />} />
-
-
         </Route>
 
       </Routes>

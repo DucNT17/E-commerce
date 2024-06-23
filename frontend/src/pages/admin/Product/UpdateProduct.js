@@ -2,14 +2,12 @@ import React, { memo, useState, useEffect, useCallback } from 'react'
 import { useForm } from "react-hook-form";
 import { validate, getBase64 } from "utils/helper";
 import { toast } from "react-toastify";
-import { showModal } from "store/app/appSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { InputForm, Select, MarkdownEditor, ButtonV2, Loading } from 'components'
+import { InputForm, Select, MarkdownEditor, ButtonV2 } from 'components'
 import { apiUpdateProduct } from 'apis';
 
 
 const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
-    const dispatch = useDispatch();
     const [invalidFields, setInvalidFields] = useState([]);
     const { categories } = useSelector((state) => state.appReducer);
     const {
@@ -88,7 +86,6 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
             const finalPayload = { ...data, ...payload };
             finalPayload.thumb = data?.thumb?.length === 0 ? preview.thumb : data.thumb[0];
             finalPayload.images = data?.images?.length === 0 ? preview.images : data.images;
-            console.log(finalPayload);
 
             const formData = new FormData();
             for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1]);
@@ -97,7 +94,7 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
             // dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }));
             const response = await apiUpdateProduct(formData, editProduct._id);
             // dispatch(showModal({ isShowModal: false, modalChildren: null }));
-            console.log(response);
+
             if (response.success) {
                 toast.success(response.mes);
                 render();
@@ -113,7 +110,7 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
                     Update Product
                 </h1>
                 <span
-                    className="text-main hover:underline cursor-pointer"
+                    className="bg-red-500 rounded-md p-2 font-medium text-white hover:underline cursor-pointer"
                     onClick={() => setEditProduct(null)}>
                     Cancel
                 </span>

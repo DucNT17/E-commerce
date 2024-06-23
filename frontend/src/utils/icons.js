@@ -10,7 +10,8 @@ import { FaUserCircle,
     FaTty, 
     FaHistory, 
     FaShoppingCart, 
-    FaUserEdit 
+    FaUserEdit,
+    FaBloggerB
 } from "react-icons/fa";
 import {
     AiFillHome,
@@ -59,7 +60,8 @@ const icons = {
     BsCartPlus, 
     MdOutlineAddShoppingCart,
     BsFillCartPlusFill,
-    BsCartCheckFill
+    BsCartCheckFill,
+    FaBloggerB
 }
 
 export default icons;
