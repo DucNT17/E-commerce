@@ -1,39 +1,68 @@
 const Brand = require('../models/brand.model');
 const asyncHandler = require('express-async-handler');
+const Product = require('../models/product.model');
 
 const createBrand = asyncHandler(async (req, res) => {
-    const response = await Brand.create(req.body);
+    const { name } = req.body;
+    const data = { name };
+    if (!name) throw new Error("missing input");
+    const checkName = await Brand.findOne({
+        name: { $regex: new RegExp("^" + name + "$", "i") },
+    });
+    if (checkName) throw new Error("Brand already exists");
+    if (req.file) {
+        data.thumb = req.file.path;
+    }
+    const response = await Brand.create(data);
     return res.json({
         success: response ? true : false,
-        createdBrand: response ? response : "Cannot create brand"
-    })
+        mes: response ? "Created Brand" : "Cannot create brand",
+    });
 })
 
 const getBrands = asyncHandler(async (req, res) => {
-    const response = await Brand.find();
-    return res.json({
-        success: response ? true : false,
-        brands: response ? response : "Cannot find brands"
+    const queries = { ...req.query };
+    const excludeFields = ["limit", "page"];
+    excludeFields.forEach((el) => delete queries[el]);
+
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(
+        /\b(gte|gt|lt|lte|size)\b/g,
+        (matchedEl) => `$${matchedEl}`
+    );
+    const formatQueries = JSON.parse(queryString);
+
+    // Pagination
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || 10;
+    const skip = (page - 1) * limit;
+    // Query categories
+    const queryCommand = Brand.find(formatQueries).skip(skip).limit(limit);
+    queryCommand.then(async (response) => {
+        const counts = await Brand.find(formatQueries).countDocuments();
+        return res.status(200).json({
+            success: true,
+            counts,
+            brands: response,
+        });
+    }).catch((err) => {
+        throw new Error(err.message);
     });
 })
 
-const getBrand = asyncHandler(async (req, res) => {
+const updateBrand = asyncHandler(async (req, res) => {
     const { bid } = req.params;
-    const response = await Brand.findById(bid);
+    const { name } = req.body;
+    const data = { name }
+    if (req.file) {
+        data.thumb = req.file.path;
+    }
+    const response = await Brand.findByIdAndUpdate(bid, data, { new: true });
     return res.json({
         success: response ? true : false,
-        brand: response ? response : "Cannot find brand"
+        mes: response ? "Updated brand" : "Cannot updated brand"
     });
 });
-
-const updateBrand= asyncHandler(async (req, res) => {
-    const { bid } = req.params;
-    const response = await Brand.findByIdAndUpdate(bid, req.body, { new: true });
-    return res.json({
-        success: response ? true : false,
-        updatedCategory: response ? response : "Cannot updated brand"
-    });
-})
 
 
 const deleteBrand = asyncHandler(async (req, res) => {
@@ -41,7 +70,7 @@ const deleteBrand = asyncHandler(async (req, res) => {
     const response = await Brand.findByIdAndDelete(bid);
     return res.json({
         success: response ? true : false,
-        deletedCategory: response ? response : "Cannot delete brand"
+        mes: response ? "Brand Deleted" : "Cannot delete brand"
     });
 })
 
@@ -49,7 +78,6 @@ const deleteBrand = asyncHandler(async (req, res) => {
 module.exports = {
     createBrand,
     getBrands,
-    getBrand,
     updateBrand,
     deleteBrand
 }

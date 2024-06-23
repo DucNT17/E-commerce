@@ -1,10 +1,9 @@
 import { apiUpdateCategory } from 'apis';
-import { ButtonV2, InputForm, Loading } from 'components';
+import { ButtonV2, InputForm } from 'components';
 import withBaseComponent from 'hocs/withBaseComponent';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { showModal } from 'store/app/appSlice';
 import { getBase64, validate } from 'utils/helper';
 
 const UpdateCategory = ({ editCategory, render, setEditCategory, dispatch }) => {

@@ -22,3 +22,8 @@ export { default as ManageCategory } from './Category/ManageCategory'
 export { default as CreateCategory } from './Category/CreateCategory'
 export { default as UpdateCategory } from './Category/UpdateCategory'
 
+// Brand
+
+export { default as ManageBrand } from './Brand/ManageBrand'
+export { default as CreateBrand } from './Brand/CreateBrand'
+export { default as UpdayeBrand } from './Brand/UpdateBrand'

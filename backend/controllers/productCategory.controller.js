@@ -45,18 +45,16 @@ const getCategory = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
     // Query categories
     const queryCommand = ProductCategory.find(formatQueries).skip(skip).limit(limit);
-    queryCommand
-        .then(async (response) => {
-            const counts = await ProductCategory.find(formatQueries).countDocuments();
-            return res.status(200).json({
-                success: true,
-                counts,
-                category: response,
-            });
-        })
-        .catch((err) => {
-            throw new Error(err.message);
+    queryCommand.then(async (response) => {
+        const counts = await ProductCategory.find(formatQueries).countDocuments();
+        return res.status(200).json({
+            success: true,
+            counts,
+            category: response,
         });
+    }).catch((err) => {
+        throw new Error(err.message);
+    });
 });
 
 const updateCategory = asyncHandler(async (req, res) => {

@@ -23,7 +23,9 @@ import {
   ManageCoupon,
   CreateCoupon,
   ManageCategory,
-  CreateCategory
+  CreateCategory,
+  ManageBrand,
+  CreateBrand
 
 } from './pages/admin'
 
@@ -88,6 +90,8 @@ function App() {
           <Route path={path.CREATE_COUPON} element={<CreateCoupon />} />
           <Route path={path.MANAGE_CATEGORY} element={<ManageCategory />} />
           <Route path={path.CREATE_CATEGORY} element={<CreateCategory />} />
+          <Route path={path.MANAGE_BRAND} element={<ManageBrand />} />
+          <Route path={path.CREATE_BRAND} element={<CreateBrand />} />
 
         </Route>
 

@@ -121,7 +121,7 @@ const ManageOrder = ({ navigate, location, dispatch }) => {
                     </thead>
                     <tbody>
                         {orders?.map((el, idx) => (
-                            <tr className="border border-gray-500" key={el._id}>
+                            <tr className="border" key={el._id}>
                                 <td className="text-center py-2">
                                     {(+params.get("page") > 1 ? +params.get("page") - 1 : 0) *
                                         process.env.REACT_APP_LIMIT +

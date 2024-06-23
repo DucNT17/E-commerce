@@ -17,12 +17,12 @@ const AdminSidebar = () => {
         else setActived((prev) => [...prev, tabID]);
     };
     return (
-        <div className='bg-white h-full py-4 uppercase'>
+        <div className='bg-white h-full py-4 uppercase no-scrollbar'>
             <Link to={'/'} className="flex flex-col justify-center items-center p-4 gap-2">
                 <img src={logo} alt="logo" />
                 <p>Admin Dashboard</p>
             </Link>
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-3 '>
                 {adminSidebar?.map(el => (
                     <Fragment key={el.id}>
                         {el.type === "SINGLE" && (

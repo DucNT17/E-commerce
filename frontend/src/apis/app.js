@@ -57,3 +57,25 @@ export const apiGetDashboard = (params) => axios({
     method: "GET",
     params,
 });
+
+// brand
+
+export const apiCreateBrand = (data) => axios({
+    url: "/brand",
+    method: "POST",
+    data,
+});
+export const apiGetBrand = (params) => axios({
+    url: "/brand",
+    method: "GET",
+    params,
+});
+export const apiUpdateBrand = (bid, data) => axios({
+    url: `/brand/${bid}`,
+    method: "PUT",
+    data,
+});
+export const apiDeleteBrand = (bid) => axios({
+    url: `/brand/${bid}`,
+    method: "DELETE",
+});
