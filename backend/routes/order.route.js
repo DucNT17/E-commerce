@@ -7,6 +7,7 @@ const { verifyAccessToken, isAdmin } = require('../middlewares/verifyToken')
 routes.post('/', [verifyAccessToken], order.createOrder)
 routes.get('/', [verifyAccessToken], order.getUserOrder)
 routes.get('/admin', [verifyAccessToken, isAdmin], order.getOrders)
+routes.get('/admin/dashboard', [verifyAccessToken, isAdmin], order.getDashboard)
 routes.put('/status/:oid', [verifyAccessToken, isAdmin], order.updateOrderStatus)
 routes.put('/cancel/:oid', [verifyAccessToken], order.cancelOrder)
 

@@ -43,3 +43,5 @@ export { default as OrderItem } from './products/OrderItem';
 export { default as PayPal } from './common/Paypal';
 export { default as Congrat } from './common/Congrat';
 export { default as CustomSelect } from './inputs/CustomSelect';
+export { default as BoxInfo } from './chart/BoxInfo';
+export { default as CustomChart } from './chart/CustomChart';

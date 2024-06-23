@@ -1,4 +1,4 @@
-import { apiGetUserOrders } from 'apis';
+import { apiCancelOrder, apiGetUserOrders } from 'apis';
 import React, { useCallback, useEffect, useState } from 'react'
 import { createSearchParams, useSearchParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
@@ -11,6 +11,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiDetail } from "react-icons/bi";
 import OrderDetail from './OrderDetail';
 import { showModal } from 'store/app/appSlice';
+import Swal from 'sweetalert2';
 
 
 const History = ({ navigate, location, dispatch }) => {
@@ -61,6 +62,25 @@ const History = ({ navigate, location, dispatch }) => {
         );
     };
 
+
+    const handleCancelOrder = (orderId) => {
+        Swal.fire({
+            icon: 'question',
+            title: "Cancel Order",
+            text: "Are you sure you want to cancel this order?",
+            cancelButtonText: "No",
+            confirmButtonText: "Yes",
+            showCancelButton: true,
+        }).then(async (rs) => {
+            if(rs.isConfirmed) {
+                const response = await apiCancelOrder(orderId);
+                if (response.success) {
+                    Swal.fire("Order cancel successful", response.mes, "success");
+                    render();
+                } else Swal.fire("Oops", response.mes, "error");
+            }
+        })
+    };
     // useEffect(() => {
     //     if (queryDebounce) {
     //         navigate({
@@ -163,7 +183,7 @@ const History = ({ navigate, location, dispatch }) => {
                             </td>
                             <td className="text-center py-2">{formatTimeV2(el.createdAt)}</td>
                             <td className="text-center py-2">
-                                <span title='cancel order' className="text-blue-500 hover:text-main inline-block hover:underline cursor-pointer px-1">
+                                <span onClick={() => handleCancelOrder(el._id)} title='cancel order' className="text-blue-500 hover:text-main inline-block hover:underline cursor-pointer px-1">
                                     <RiDeleteBin6Line size={22} />
                                 </span>
                                 <span onClick={() => quickViewOrder(el)}

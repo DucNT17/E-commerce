@@ -78,7 +78,7 @@ const AdminSidebar = () => {
                     <span>
                         <RiShareForwardLine />
                     </span>
-                    <span className="uppercase">về trang chủ</span>
+                    <span className="uppercase">Back to homepage</span>
                 </Link>
             </div>
         </div>

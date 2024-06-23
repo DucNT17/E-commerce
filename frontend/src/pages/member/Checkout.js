@@ -36,8 +36,8 @@ const Checkout = ({ dispatch, navigate }) => {
         if (currentCart.length <= 0 && !checkoutCompleted) {
             Swal.fire({
                 icon: "warning",
-                title: "Giỏ hàng trống",
-                text: "Vui lòng chọn mặt hàng trước khi thanh toán",
+                title: "Your cart is empty",
+                text: "Please add product to your cart before checkout",
             }).then(() => {
                 navigate("/");
             });
@@ -75,7 +75,7 @@ const Checkout = ({ dispatch, navigate }) => {
                 title: "Order",
                 text: `Please pay in cash the amount ${formatPriceVN(total)} upon receipt`,
                 showConfirmButton: true,
-                confirmButtonText: "Confrim",
+                confirmButtonText: "Confirm",
                 showCancelButton: true,
                 cancelButtonText: "Go back",
             }).then((result) => {

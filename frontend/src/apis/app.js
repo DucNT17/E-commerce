@@ -49,3 +49,11 @@ export const apiDeleteCoupon = (cid) => axios({
     url: `/coupon/${cid}`,
     method: "DELETE",
 });
+
+// dashboard
+
+export const apiGetDashboard = (params) => axios({
+    url: "/order/admin/dashboard",
+    method: "GET",
+    params,
+});

@@ -99,7 +99,7 @@ const cancelOrder = asyncHandler(async (req, res) => {
     if (order.status === 2 || order.status === 3 || order.status === 4) {
         return res.status(200).json({
             success: false,
-            mes: "Orders cannot be canceled once the order has been confirmed",
+            mes: "Orders cannot be canceled once the order has been purchased",
         });
     }
 
@@ -230,10 +230,172 @@ const getOrders = asyncHandler(async (req, res) => {
     });
 });
 
+function getCountPreviousDay(count = 1, date = new Date()) {
+    const previous = new Date(date.getTime());
+    previous.setDate(date.getDate() - count);
+    return previous;
+}
+
+const getDashboard = asyncHandler(async (req, res) => {
+    const { to, from, type } = req.query;
+    const format = type === "MTH" ? "%Y-%m" : "%Y-%m-%d";
+    const start = from || getCountPreviousDay(7, new Date(to));
+    const end = to || getCountPreviousDay(0);
+    const [users, totalSuccess, totalFailed, soldQuantities, chartData, pieData] =
+        await Promise.all([
+            // Thống kê Người dùng mới
+            // user []
+            User.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { createdAt: { $gte: new Date(start) } },
+                            { createdAt: { $lte: new Date(end) } },
+                        ],
+                    },
+                },
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 },
+                    },
+                },
+            ]),
+            // Tính tổng số đơn đã thanh toán thành công
+            // totalSuccess []
+            Order.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { createdAt: { $gte: new Date(start) } },
+                            { createdAt: { $lte: new Date(end) } },
+                            { status: 3 },
+                        ],
+                    },
+                },
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: "$total" },
+                    },
+                },
+            ]),
+            // Tính tổng số đơn chưa thanh toán
+            // totalFailed []
+            Order.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { createdAt: { $gte: new Date(start) } },
+                            { createdAt: { $lte: new Date(end) } },
+                            { status: 1 || 2 || 4 },
+                        ],
+                    },
+                },
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: "$total" },
+                    },
+                },
+            ]),
+            // Tính tổng số sản phẩm đã báns
+            // soldQuantities []
+            Order.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { createdAt: { $gte: new Date(start) } },
+                            { createdAt: { $lte: new Date(end) } },
+                            { status: 3 },
+                        ],
+                    },
+                },
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: { $sum: "$products.quantity" } },
+                    },
+                },
+            ]),
+            // Tính tổng doanh thu theo thời gian và trạng thái
+            // chartData
+            Order.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { createdAt: { $gte: new Date(start) } },
+                            { createdAt: { $lte: new Date(end) } },
+                            { status: 3 },
+                        ],
+                    },
+                },
+                { $unwind: "$createdAt" },
+                {
+                    $group: {
+                        _id: {
+                            $dateToString: {
+                                format,
+                                date: "$createdAt",
+                            },
+                        },
+                        sum: { $sum: "$total" },
+                    },
+                },
+                {
+                    $project: {
+                        date: "$_id",
+                        sum: 1,
+                        _id: 0,
+                    },
+                },
+            ]),
+            // Tính tổng số đơn hàng theo trạng thái
+            // pieData
+            Order.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { createdAt: { $gte: new Date(start) } },
+                            { createdAt: { $lte: new Date(end) } },
+                        ],
+                    },
+                },
+                { $unwind: "$status" },
+                {
+                    $group: {
+                        _id: "$status",
+                        sum: { $sum: 1 },
+                    },
+                },
+                {
+                    $project: {
+                        status: "$_id",
+                        sum: 1,
+                        _id: 0,
+                    },
+                },
+            ]),
+        ]);
+    return res.json({
+        success: true,
+        data: {
+            users,
+            totalSuccess,
+            totalFailed,
+            soldQuantities,
+            chartData,
+            pieData,
+        },
+    });
+});
+
+
 module.exports = {
     createOrder,
     updateOrderStatus,
     getUserOrder,
     getOrders,
-    cancelOrder
+    cancelOrder,
+    getDashboard
 }
