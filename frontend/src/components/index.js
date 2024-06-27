@@ -45,3 +45,5 @@ export { default as Congrat } from './common/Congrat';
 export { default as CustomSelect } from './inputs/CustomSelect';
 export { default as BoxInfo } from './chart/BoxInfo';
 export { default as CustomChart } from './chart/CustomChart';
+export { default as BlogCard } from './blogs/BlogCard';
+export { default as BlogSlider } from './blogs/BlogSlider';
