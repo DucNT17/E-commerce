@@ -3,12 +3,13 @@ import { Breadcrumb } from 'components'
 import DOMPurify from 'dompurify';
 import withBaseComponent from 'hocs/withBaseComponent'
 import moment from 'moment';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 
 const DetailBlog = ({ data, dispatch, navigate, location }) => {
+    const titleRef = useRef()
     const params = useParams();
     const [detailBlog, setDetailBlog] = useState(null)
     const [pid, setPid] = useState(null);
@@ -33,13 +34,18 @@ const DetailBlog = ({ data, dispatch, navigate, location }) => {
             fetchBlogData()
         }
         window.scrollTo(0, 0);
+        titleRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "start"
+        });
     }, [pid, params.pid])
 
 
 
     return (
         <div className='w-full'>
-            <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
+            <div ref={titleRef} className='h-[81px] bg-gray-100 flex justify-center items-center'>
                 <div className='w-main'>
                     <h3 className='font-semibold'>{detailBlog?.title}</h3>
                     <Breadcrumb title={detailBlog?.title} />

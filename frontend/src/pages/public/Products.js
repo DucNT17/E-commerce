@@ -57,7 +57,11 @@ const Products = ({ navigate }) => {
     const q = { ...priceQuery, ...queries }
     window.scrollTo(0, 0);
     fetchProductsByCategory(q);
-    titleRef.current.scrollIntoView({ block: 'center' });
+    titleRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start"
+    });
   }, [params]);
 
   const changeActiveFilter = useCallback((name) => {

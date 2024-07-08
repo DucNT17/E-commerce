@@ -107,7 +107,11 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
     }
     window.scrollTo(0, 0);
     if (!isQuickView){
-      titleRef.current.scrollIntoView({ block: 'center' });
+      titleRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start"
+      });
     }
   }, [pid, params.pid]);
 
@@ -175,8 +179,8 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
   }
   return (
     <div className={clsx('w-full')}>
-      {!isQuickView && <div className='h-[81px] bg-gray-100 flex justify-center items-center'>
-        <div ref={titleRef} className='w-main'>
+      {!isQuickView && <div ref={titleRef} className='h-[81px] bg-gray-100 flex justify-center items-center'>
+        <div className='w-main'>
           <h3 className='font-semibold'>{currentProduct?.title || product?.title}</h3>
           <Breadcrumb title={currentProduct?.title || product?.title} category={category} />
         </div>

@@ -20,7 +20,11 @@ const Blog = () => {
   
   useEffect(() => {
     fetchBlogs();
-    titleRef.current.scrollIntoView({ block: 'center' });
+    titleRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start"
+    });
   }, [])
 
   return (
