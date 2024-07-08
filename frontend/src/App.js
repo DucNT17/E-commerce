@@ -14,6 +14,7 @@ import {
   ContactUs,
   DetailBlog
 } from './pages/public';
+
 import {
   AdminLayout,
   ManageProduct,
@@ -28,7 +29,9 @@ import {
   ManageBrand,
   CreateBrand,
   CreateBlog,
-  ManageBlog
+  ManageBlog,
+  CreateBanner,
+  ManageBanner
 
 } from './pages/admin'
 
@@ -98,6 +101,8 @@ function App() {
           <Route path={path.CREATE_BRAND} element={<CreateBrand />} />
           <Route path={path.CREATE_BLOG} element={<CreateBlog />} />
           <Route path={path.MANAGE_BLOG} element={<ManageBlog />} />
+          <Route path={path.CREATE_BANNER} element={<CreateBanner />} />
+          <Route path={path.MANAGE_BANNER} element={<ManageBanner />} />
         </Route>
 
         <Route path={path.MEMBER} element={<MemberLayout />}>

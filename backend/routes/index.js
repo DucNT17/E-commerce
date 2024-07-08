@@ -3,6 +3,7 @@ const productRoute = require('./product.route')
 const productCategoryRoute = require('./productCategory.route')
 const blogRoute = require('./blog.route')
 const brandRoute = require('./brand.route')
+const bannerRoute = require('./banner.route')
 const couponRoute = require('./coupon.route')
 const orderRoute = require('./order.route')
 const insert = require('./insert')
@@ -14,6 +15,7 @@ const initRoutes = (app) => {
     app.use('/api/productCategory', productCategoryRoute);
     app.use('/api/blog', blogRoute);
     app.use('/api/brand', brandRoute);
+    app.use('/api/banner', bannerRoute);
     app.use('/api/coupon', couponRoute)
     app.use('/api/order', orderRoute)
     app.use('/api/insert', insert)

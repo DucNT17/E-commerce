@@ -108,3 +108,25 @@ export const apiGetDetailBlog = (id) => axios({
     url: `/blog/${id}`,
     method: "GET",
 })
+
+// Banner
+
+export const apiCreateBanner = (data) => axios({
+    url: "/banner",
+    method: "POST",
+    data,
+});
+export const apiGetBanner = (params) => axios({
+    url: "/banner",
+    method: "GET",
+    params,
+});
+export const apiUpdateBanner = (bid, data) => axios({
+    url: `/banner/${bid}`,
+    method: "PUT",
+    data,
+});
+export const apiDeleteBanner = (bid) => axios({
+    url: `/banner/${bid}`,
+    method: "DELETE",
+});

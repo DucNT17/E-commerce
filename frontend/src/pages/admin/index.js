@@ -26,3 +26,7 @@ export { default as CreateBrand } from './Brand/CreateBrand'
 // Blog
 export { default as ManageBlog } from './Blog/ManageBlog'
 export { default as CreateBlog } from './Blog/CreateBlog'
+
+// Banner
+export { default as ManageBanner } from './Banner/ManageBanner'
+export { default as CreateBanner } from './Banner/CreateBanner'

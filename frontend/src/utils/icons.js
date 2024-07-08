@@ -11,7 +11,8 @@ import { FaUserCircle,
     FaHistory, 
     FaShoppingCart, 
     FaUserEdit,
-    FaBloggerB
+    FaBloggerB,
+    FaImage
 } from "react-icons/fa";
 import {
     AiFillHome,
@@ -61,7 +62,8 @@ const icons = {
     MdOutlineAddShoppingCart,
     BsFillCartPlusFill,
     BsCartCheckFill,
-    FaBloggerB
+    FaBloggerB,
+    FaImage
 }
 
 export default icons;

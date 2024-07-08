@@ -38,6 +38,9 @@ const path = {
     MANAGE_BLOG: "manage-blog",
     CREATE_BLOG: "create-blog",
 
+    MANAGE_BANNER: "manage-banner",
+    CREATE_BANNER: "create-banner",
+
     // Members
     MEMBER: "member",
     PERSONAL: "personal",

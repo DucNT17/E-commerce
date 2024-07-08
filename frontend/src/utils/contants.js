@@ -195,7 +195,7 @@ export const voteOptions = [
     },
 ]
 
-const { MdSpaceDashboard, RiBillLine, TbBrandProducthunt, MdCategory, RiCoupon3Fill, MdGroups, FaBloggerB } = icons
+const { MdSpaceDashboard, RiBillLine, TbBrandProducthunt, MdCategory, RiCoupon3Fill, MdGroups, FaBloggerB, FaImage } = icons
 
 export const adminSidebar = [
     {
@@ -294,6 +294,22 @@ export const adminSidebar = [
     },
     {
         id: 8,
+        type: "PARENT",
+        text: "Banner",
+        icon: <FaImage size={20} />,
+        submenu: [
+            {
+                text: "Manage Banner",
+                path: `/${path.ADMIN}/${path.MANAGE_BANNER}`,
+            },
+            {
+                text: "Create Banner",
+                path: `/${path.ADMIN}/${path.CREATE_BANNER}`,
+            },
+        ],
+    },
+    {
+        id: 9,
         type: "SINGLE",
         text: "User",
         path: `/${path.ADMIN}/${path.MANAGE_USER}`,
