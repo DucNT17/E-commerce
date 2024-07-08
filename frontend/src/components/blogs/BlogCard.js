@@ -14,14 +14,17 @@ const BlogCard = ({ dispatch, navigate, bid, data, className }) => {
                     <img src={data?.thumb} alt='thumb' className='w-[380px] h-[254px] object-cover' />
                 </div>
                 <div className='flex flex-col gap-4 mt-4'>
-                    <div className='flex justify-center text-base font-semibold text-center uppercase hover:text-main cursor-pointer'>
+                    <div
+                        onClick={e => navigate(`/blogs/${bid}/${data?.slug}`)}
+                        className='flex justify-center text-base font-semibold text-center uppercase hover:text-main cursor-pointer'
+                    >
                         {data?.title}
                     </div>
                     <div className='flex gap-8 justify-center items-center text-xs font-light'>
                         <span className='flex justify-center items-center gap-1'>
                             <IoIosTimer />
                             <span>
-                                {moment(data?.updatedAt).format('ll')}
+                                {moment(data?.createdAt).format('DD/MM/YYYY')}
                             </span>
                         </span>
                         <span className='flex items-center justify-center gap-1'>

@@ -3,9 +3,9 @@ import React, { memo } from 'react'
 import { formatPriceVN, renderStarFromNumber } from 'utils/helper'
 
 
-const ProductCard = ({ price, totalRatings, title, image, pid, navigate, category }) => {
+const ProductCard = ({ price, totalRatings, title, image, pid, navigate, category, slug }) => {
     return (
-        <div onClick={(e) => navigate(`/${category?.toLowerCase()}/${pid}/${title}`)}
+        <div onClick={(e) => navigate(`/${category?.toLowerCase()}/${pid}/${slug}`)}
             className='w-1/3 flex-auto px-[10px] mb-[20px] cursor-pointer'>
             <div className='border flex w-full'>
                 <img src={image} alt='product' className='w-[90px] object-contain p-4 ' />

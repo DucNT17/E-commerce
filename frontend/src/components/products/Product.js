@@ -104,7 +104,7 @@ const Product = ({
   return (
     <div className={clsx('w-full text-base px-[10px]', className)}>
       <div className='w-full border p-[15px] flex flex-col items-center cursor-pointer'
-        onClick={(e) => navigate(`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.title}`)}
+        onClick={(e) => navigate(`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.slug}`)}
         onMouseEnter={e => {
           e.stopPropagation();
           setIsShowOption(true);
@@ -125,7 +125,6 @@ const Product = ({
                 <SelectOption icon={<BsFillCartPlusFill />} />
               </span>
             }
-            {}
             <span title='Add to wishlist' onClick={(e) => handleClickOptions(e, 'WISHLIST')}><SelectOption icon={<FaHeart color={current?.wishlist?.some(i => i._id === pid) ? 'red' : 'black'} />} /></span>
           </div>}
           <img src={productData?.thumb || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'}

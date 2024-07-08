@@ -56,7 +56,6 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
     images: [],
     price: '',
   })
-
   useEffect(() => {
     if (data) {
       setPid(data.pid);
@@ -66,7 +65,6 @@ const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
       setCategory(params.category);
     }
   }, [data, params])
-
   const fetchProducts = async () => {
     const response = await apiGetProducts({ category });
     if (response.success) {

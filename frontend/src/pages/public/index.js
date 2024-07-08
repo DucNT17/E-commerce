@@ -10,4 +10,4 @@ export { default as FinalRegister} from './FinalRegister'
 export { default as ResetPassword} from './ResetPassword'
 export { default as DetailCart} from './DetailCart'
 export { default as ContactUs} from './ContactUs'
-
+export { default as DetailBlog } from './DetailBlog'

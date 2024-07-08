@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { useParams, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams, createSearchParams } from 'react-router-dom'
 import {
   Breadcrumb,
   Product,
