@@ -34,7 +34,7 @@ const BlogCard = ({ dispatch, navigate, bid, data, className }) => {
                             </span>
                         </span>
                     </div>
-                    {data?.description?.length === 1 && <div className='text-xs line-clamp-3 mb-8' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.description[0]) }}></div>}
+                    <div className='text-xs line-clamp-3 mb-8' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.description[0]) }}></div>
                 </div>
             </div>
         </div>

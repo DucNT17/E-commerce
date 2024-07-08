@@ -66,7 +66,7 @@ const Header = ({ dispatch }) => {
           >
             <FaUserCircle color='red' />
             <span>Profile</span>
-            {isShowOptions && <div onClick={e => e.stopPropagation()} className='absolute flex flex-col top-full left-[10px] bg-gray-100 min-w-[150px] border rounded-lg'>
+            {isShowOptions && <div onClick={e => e.stopPropagation()} className='absolute flex flex-col top-full left-[10px] bg-gray-100 min-w-[150px] border rounded-lg z-10'>
               <Link className='p-2 w-full hover:bg-sky-100 border-b-2 font-semibold' to={`/${path.MEMBER}/${path.PERSONAL}`}>
                 Profile
               </Link>

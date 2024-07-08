@@ -21,7 +21,7 @@ const createBanner = asyncHandler(async (req, res) => {
 
 const getBanners = asyncHandler(async (req, res) => {
     const queries = { ...req.query };
-    const excludeFields = ["limit", "page"];
+    const excludeFields = ["limit", "page", 'sort'];
     excludeFields.forEach((el) => delete queries[el]);
 
     let queryString = JSON.stringify(queries);
